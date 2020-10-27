@@ -1,0 +1,23 @@
+---
+  - name: Apache server installed
+    hosts: node1
+    become: true
+    vars:
+      iis_test_message: "Hello, world!"
+    tasks:
+  
+    - name: latest Apache version installed
+      package:
+        name: httpd
+        state: latest
+  
+    - name: Apache enabled and running
+      service:
+        name: httpd
+        enabled: true
+        state: started
+  
+    - name: copy index.html
+      copy:
+        content: "{{ iis_test_message }}"
+        dest: /var/www/html/index.html
