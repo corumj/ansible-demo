@@ -3,7 +3,7 @@
     hosts: all
     become: true
     vars:
-      survey_service: ""  
+      survey_service: httpd  
       survey_state: started 
     tasks:
     - name: Apache enabled and running
