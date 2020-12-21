@@ -2,15 +2,12 @@
   - name: Apache server installed
     hosts: all
     become: true
+    var:
+      survey_service: ""  
+      survey_state: started 
     tasks:
-  
-    - name: latest Apache version installed
-      package:
-        name: httpd
-        state: latest
-  
     - name: Apache enabled and running
       service:
-        name: httpd
+        name: "{{ survey_service }}"
         enabled: true
-        state: started
+        state: "{{ survey_state }}"

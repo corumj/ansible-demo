@@ -1,0 +1,9 @@
+---
+- name: Patch everything
+  hosts: all 
+  become: yes 
+  tasks:
+    - name: Update all 
+      yum:
+        name: '*'
+        state: latest

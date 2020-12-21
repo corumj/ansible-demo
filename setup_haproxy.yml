@@ -1,0 +1,13 @@
+--- 
+- name: setup HA proxy
+  hosts: balancer 
+  become: yes 
+  vars: 
+    haproxy_backend_servers:
+      - name: 18.209.214.3
+        address: 18.209.214.3:80
+      - name: 3.238.219.190
+        address: 3.238.219.190:80
+
+  roles:
+    - geerlingguy.haproxy
