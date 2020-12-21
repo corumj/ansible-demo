@@ -2,7 +2,7 @@
   - name: Apache server installed
     hosts: all
     become: true
-    var:
+    vars:
       survey_service: ""  
       survey_state: started 
     tasks:
