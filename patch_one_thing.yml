@@ -1,0 +1,10 @@
+--- 
+- name: Patch with a survey
+  hosts: all 
+  vars:
+    patch_what: "{{ survey_patch_what }}"
+  tasks:
+    - name: Yum update a specific module
+      package:
+        name: "{{ patch_what }}"
+        state: latest 
