@@ -1,0 +1,17 @@
+---
+- name: Teardown AWS for demos 
+  hosts: localhost
+  connection: local 
+  gather_facts: no
+  tasks:
+  - name: Find AWS User information
+    amazon.aws.aws_caller_info:
+      profile: "{{ aws_profile }}"
+    register: user
+
+  - name: Setup AWS
+    include_role:
+      name: aws-infra-teardown
+    vars:
+      aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+    

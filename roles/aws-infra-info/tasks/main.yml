@@ -1,0 +1,34 @@
+- name: Retrieve required AWS infrastructure ID's 
+  block:
+    - name: retrieve vpc ID                 
+      amazon.aws.ec2_vpc_net_info:
+        profile: "{{ aws_profile }}"
+        filters:
+          "tag:user": "{{ aws_user }}"
+          "tag:demo": Ansible
+      register: vpc_info 
+
+    - name: retrieve vpc subnet info 
+      amazon.aws.ec2_vpc_subnet_info:
+        profile: "{{ aws_profile }}"
+        filters:
+          "tag:user": "{{ aws_user }}"
+          "tag:demo": Ansible
+      register: vpc_subnet_info
+
+    - name: retrieve vpc route table id 
+      community.aws.ec2_vpc_route_table_info:
+        profile: "{{ aws_profile }}"
+        region: "{{ aws_region }}"
+        filters:
+          "tag:user": "{{ aws_user }}"
+          "tag:demo": Ansible
+      register: vpc_route_info
+
+    - name: Retrieve Security Group info 
+      amazon.aws.ec2_group_info:
+        profile: "{{ aws_profile }}"
+        filters:
+          "tag:user": "{{ aws_user }}"
+          "tag:demo": Ansible
+      register: sec_info

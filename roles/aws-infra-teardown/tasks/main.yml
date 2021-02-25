@@ -1,0 +1,74 @@
+- name: Retrieve required AWS infrastructure ID's 
+  block:
+    - name: retrieve vpc ID                 
+      amazon.aws.ec2_vpc_net_info:
+        profile: "{{ aws_profile }}"
+        filters:
+          "tag:user": "{{ aws_user }}"
+          "tag:demo": Ansible
+      register: vpc_info 
+
+    - name: retrieve vpc subnet info 
+      amazon.aws.ec2_vpc_subnet_info:
+        profile: "{{ aws_profile }}"
+        filters:
+          "tag:user": "{{ aws_user }}"
+          "tag:demo": Ansible
+      register: vpc_subnet_info
+
+    - name: retrieve vpc route table id 
+      community.aws.ec2_vpc_route_table_info:
+        profile: "{{ aws_profile }}"
+        region: "{{ aws_region }}"
+        filters:
+          "tag:user": "{{ aws_user }}"
+          "tag:demo": Ansible
+      register: vpc_route_info
+
+    - name: Retrieve Security Group info 
+      amazon.aws.ec2_group_info:
+        profile: "{{ aws_profile }}"
+        filters:
+          "tag:user": "{{ aws_user }}"
+          "tag:demo": Ansible
+      register: sec_info
+
+- name: Remove AWS Infrastructure 
+  block:
+    - name: Delete the subnet on the VPC  
+      amazon.aws.ec2_vpc_subnet:
+        profile: "{{ aws_profile }}"
+        vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
+        cidr: 10.0.0.0/16
+        state: absent 
+      when: vpc_info.vpcs
+
+    - name: Remove subnet route table 
+      community.aws.ec2_vpc_route_table:
+        profile: "{{ aws_profile }}"
+        vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
+        region: "{{ aws_region }}"
+        lookup: id
+        route_table_id: "{{ vpc_route_info.route_tables[0].id }}"
+        state: absent 
+        
+    - name: Remove Internet Gateway for VPC  
+      community.aws.ec2_vpc_igw:
+        profile: "{{ aws_profile }}"
+        vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
+        region: "{{ aws_region }}"
+        state: absent
+
+    - name: Remove security group 
+      amazon.aws.ec2_group: 
+        profile: "{{ aws_profile }}"
+        group_id: "{{ sec_info.security_groups[0].group_id }}"
+        state: absent
+
+    - name: Remove the VPC 
+      amazon.aws.ec2_vpc_net:
+        profile: "{{ aws_profile }}"
+        name: "{{ vpc_info.vpcs[0].tags.Name }}"
+        cidr_block: 10.0.0.0/16
+        tenancy: default
+        state: absent

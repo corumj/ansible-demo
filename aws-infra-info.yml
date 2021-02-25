@@ -1,0 +1,21 @@
+---
+- name: Get AWS Infra info
+  hosts: localhost
+  connection: local 
+  gather_facts: no
+  tasks:
+  - name: Find AWS User information
+    amazon.aws.aws_caller_info:
+      profile: "{{ aws_profile }}"
+    register: user
+
+  - name: Setup AWS
+    include_role:
+      name: aws-infra-info
+    vars:
+      aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+
+  - name: try to print a variable set inside the role 
+    debug:
+      var: vpc_info
+    

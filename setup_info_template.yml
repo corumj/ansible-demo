@@ -1,0 +1,14 @@
+# Stuff you will need to change if you want HTTPS setup using a google domain
+
+# Setup custom domain so HTTPS can be setup if needed 
+#######################
+# I only have set this up for google domains so if you don't have that, you'll
+# need to figure this out on your own 
+# Directions for setting up Dynamic DNS with Google Domains as well as 
+# the API call to update it can be found here:
+# https://support.google.com/domains/answer/6147083 
+#######################
+googledomains: false # set to true if you have google domains
+domain: example.com 
+google_username: retrieved from google domains when setting up synth record 
+google_password: from google domains synth record 

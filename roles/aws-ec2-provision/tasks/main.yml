@@ -1,0 +1,44 @@
+--- 
+- name: Provision ec2 Windows instance 
+  community.aws.ec2_instance:
+    state: present
+    name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}-{{ aws_user }}"
+    security_group: "{{ sec_info.security_groups[0].group_name }}"
+    vpc_subnet_id: "{{ vpc_subnet_info.subnets[0].subnet_id }}"
+    image_id: "{{ aws_windows_ami }}"
+    instance_type: "{{ aws_instance_type }}"
+    region: "{{ aws_region }}"
+    tags: 
+      group_name: "{{ group_name }}"
+      short_desc: "{{ short_desc }}"
+      server_env: "{{ server_env }}" 
+      server_os: "{{ server_os }}"
+      user: "{{ aws_user }}"
+      demo: Ansible 
+      business_domain_name: "{{ business_domain_name }}"
+    user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
+    wait: yes
+  register: ec2 
+  when: server_os == 'windows'
+
+- name: Provision ec2 Linux instance 
+  community.aws.ec2_instance:
+    state: present
+    name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}-{{ aws_user }}"
+    security_group: "{{ sec_info.security_groups[0].group_name }}"
+    vpc_subnet_id: "{{ vpc_subnet_info.subnets[0].subnet_id }}"
+    image_id: "{{ aws_linux_ami }}"
+    instance_type: "{{ aws_instance_type }}"
+    region: "{{ aws_region }}"
+    key_name: "{{ aws_user }}-ansible-demo-key"
+    tags: 
+      group_name: "{{ group_name }}"
+      short_desc: "{{ short_desc }}"
+      server_env: "{{ server_env }}" 
+      server_os: "{{ server_os }}"
+      business_domain_name: "{{ business_domain_name }}"
+      user: "{{ aws_user }}"
+      demo: Ansible 
+    wait: yes
+  register: ec2 
+  when: server_os == 'linux'

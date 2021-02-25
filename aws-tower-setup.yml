@@ -1,0 +1,74 @@
+---
+- name: Setup Tower infrastructure 
+  hosts: localhost
+  connection: local 
+  gather_facts: no
+  vars:
+    group_name: "tower"
+    short_desc: "tower"
+    server_env: "test" 
+    server_os: "linux"
+    business_domain_name: "Red Hat"
+  vars_prompt:
+    - name: prompt_admin_password
+      prompt: Set your initial Tower admin password
+      private: yes
+  tasks:
+  - name: Find AWS User information
+    amazon.aws.aws_caller_info:
+      profile: "{{ aws_profile }}"
+    register: user
+
+  - name: Get AWS infra info 
+    include_role:
+      name: aws-infra-info
+    vars:
+      aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+    
+  - name: call provision role and see if variable is available there 
+    include_role:
+      name: aws-ec2-provision 
+    vars: 
+      aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+
+  - name: print ec2 variable 
+    debug:
+      var: ec2
+
+  - name: Add the host 
+    add_host:
+      name: "{{ ec2.instances[0].public_ip_address }}"
+      groups:
+        - tower 
+      ansible_ssh_private_key_file: ~/.ssh/id_rsa 
+      ansible_user: ec2-user
+      admin_password: "{{ prompt_admin_password }}"
+      tower_ip: "{{ ec2.instances[0].public_ip_address }}"
+
+- name: Install tower 
+  hosts: tower 
+  become: yes
+  vars:
+    certbot_install_from_source: yes # need this to get around a bug that hasn't been fixed in the release yet
+    certbot_admin_email: corum@me.com
+    certbot_create_if_missing: true
+    certbot_create_standalone_stop_services:
+      - nginx
+    certbot_certs:
+      - domains:
+          - "{{ domain }}"
+  tasks:
+    - name: import login credentials for Tower
+      include_vars: "{{lookup('first_found', login_info)}}"
+      vars:
+        login_info:
+          - 'setup_info.yml'
+          - 'login_info.yml'
+    - name: Run updates 
+      package:
+        name: '*'
+        state: latest 
+        
+    - name: Setup tower on AWS Instance 
+      include_role:
+        name: tower-setup

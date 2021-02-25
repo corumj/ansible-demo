@@ -1,0 +1,19 @@
+# AWS 
+aws_profile: saml
+aws_region: us-east-1 # must match your aws config profile - used for community.aws modules
+aws_linux_ami: ami-096fda3c22c1c990a # must be for your region
+aws_windows_ami: ami-0229f7666f517b31e # must be for your region
+aws_instance_type: t2.medium 
+
+# Tower
+domain: ansible.peripatetic.me
+tower_version: 3.8.1-1
+tower_installer_url: https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-{{ tower_version }}.tar.gz
+default_tower_url: https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-latest.tar.gz
+# aw_repo_url:
+
+# Tower Certificate for TLS 
+certbot_create_command: >-
+  certbot certonly --standalone --noninteractive --agree-tos
+  --email {{ cert_item.email | default(certbot_admin_email) }}
+  -d {{ domain }}
