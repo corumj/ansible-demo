@@ -122,6 +122,7 @@
     inputs:
       username: "admin"
       password: "{{ admin_password }}"
+      host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
     tower_username: "admin"
     tower_password: "{{ admin_password }}"
     tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"

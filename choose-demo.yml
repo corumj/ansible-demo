@@ -3,6 +3,17 @@
   hosts: localhost 
   connection: local 
   tasks:
-    - name: debug 
+    - name: Setup Windows demo  
       debug:
         msg: "Hello World, you chose to demo {{ demo_name }}"
+      when: demo_name == 'Windows'
+
+    - name: Setup Linux demo  
+      debug:
+        msg: "Hello World, you chose to demo {{ demo_name }}"
+      when: demo_name == 'Linux'
+
+    - name: Setup ServiceNow demo  
+      debug:
+        msg: "Hello World, you chose to demo {{ demo_name }}"
+      when: demo_name == 'ServiceNow'
