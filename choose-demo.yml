@@ -1,0 +1,8 @@
+---
+- name: Pick a demo to stage 
+  hosts: localhost 
+  connection: local 
+  tasks:
+    - name: debug 
+      debug:
+        msg: "Hello World, you chose to demo {{ demo_name }}"

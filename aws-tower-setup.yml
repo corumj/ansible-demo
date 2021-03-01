@@ -19,6 +19,12 @@
       profile: "{{ aws_profile }}"
     register: user
 
+  - name: Setup AWS
+    include_role:
+      name: aws-infra-setup 
+    vars:
+      aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+      
   - name: Get AWS infra info 
     include_role:
       name: aws-infra-info
@@ -44,26 +50,18 @@
       ansible_user: ec2-user
       admin_password: "{{ prompt_admin_password }}"
       tower_ip: "{{ ec2.instances[0].public_ip_address }}"
+      aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
 
 - name: Install tower 
   hosts: tower 
   become: yes
-  vars:
-    certbot_install_from_source: yes # need this to get around a bug that hasn't been fixed in the release yet
-    certbot_admin_email: corum@me.com
-    certbot_create_if_missing: true
-    certbot_create_standalone_stop_services:
-      - nginx
-    certbot_certs:
-      - domains:
-          - "{{ domain }}"
   tasks:
-    - name: import login credentials for Tower
-      include_vars: "{{lookup('first_found', login_info)}}"
-      vars:
-        login_info:
-          - 'setup_info.yml'
-          - 'login_info.yml'
+    # - name: import login credentials for Tower
+    #   include_vars: "{{lookup('first_found', login_info)}}"
+    #   vars:
+    #     login_info:
+    #       - 'setup_info.yml'
+    #       - 'login_info.yml'
     - name: Run updates 
       package:
         name: '*'

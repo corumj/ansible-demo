@@ -1,6 +1,7 @@
 --- 
 - name: Provision ec2 Windows instance 
   community.aws.ec2_instance:
+    profile: "{{ aws_profile }}"
     state: present
     name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}-{{ aws_user }}"
     security_group: "{{ sec_info.security_groups[0].group_name }}"
@@ -23,6 +24,7 @@
 
 - name: Provision ec2 Linux instance 
   community.aws.ec2_instance:
+    profile: "{{ aws_profile }}"
     state: present
     name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}-{{ aws_user }}"
     security_group: "{{ sec_info.security_groups[0].group_name }}"

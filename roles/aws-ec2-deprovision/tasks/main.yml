@@ -1,0 +1,12 @@
+--- 
+- name: Deprovision ec2 Windows instance 
+  community.aws.ec2_instance:
+    profile: "{{ aws_profile }}"
+    state: absent
+    filters:
+      "tag:business_domain_name": "{{ business_domain_name }}"
+      "tag:short_desc": "{{ short_desc }}"
+      "tag:demo": Ansible 
+      instance-state-name: running 
+    wait: yes
+  register: deprovision
