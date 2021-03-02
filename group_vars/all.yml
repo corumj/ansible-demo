@@ -5,6 +5,10 @@ aws_linux_ami: ami-096fda3c22c1c990a # must be for your region
 aws_windows_ami: ami-0229f7666f517b31e # must be for your region
 aws_instance_type: t2.medium 
 
+# Key pair 
+public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"  
+private_key: "{{ lookup('file', '~/.ssh/id_rsa') }}"  
+
 # Tower
 tower_version: 3.8.1-1
 tower_installer_url: https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-{{ tower_version }}.tar.gz

@@ -79,7 +79,7 @@
     profile: "{{ aws_profile }}"
     state: present 
     zone: redhatgov.io
-    record: "ansible.{{ aws_user }}.adp.redhatgov.io"
+    record: "ansible.{{ aws_user }}.ade.redhatgov.io"
     type: A
     value: "{{ tower_ip }}"
     wait: yes
@@ -108,9 +108,9 @@
     state: present 
 
 - name: Use certbot to setup certificate 
-  shell: "certbot --nginx -d ansible.{{ aws_user }}.adp.redhatgov.io --non-interactive --agree-tos -m {{ aws_user }}@redhat.com"
+  shell: "certbot --nginx -d ansible.{{ aws_user }}.ade.redhatgov.io --non-interactive --agree-tos -m {{ aws_user }}@redhat.com"
   args:
-    creates: /etc/letsencrypt/live/ansible.{{ aws_user }}.adp.redhatgov.io/fullchain.pem
+    creates: /etc/letsencrypt/live/ansible.{{ aws_user }}.ade.redhatgov.io/fullchain.pem
 
 - name: Setup Tower Credential 
   awx.awx.tower_credential:
@@ -122,10 +122,10 @@
     inputs:
       username: "admin"
       password: "{{ admin_password }}"
-      host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+      host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_username: "{{ tower_username }}"
     tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true
 
 - name: Create AWS Windows Machine credential 
@@ -143,7 +143,7 @@
       become_password: "{{ admin_password }}"
     tower_username: "{{ tower_username }}"
     tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true
 
 - name: Create AWS Linux Machine credential 
@@ -155,10 +155,10 @@
     credential_type: Machine 
     inputs:
       username: ec2-user
-      ssh_key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      ssh_key_data: "{{ private_key }}"
     tower_username: "{{ tower_username }}"
     tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true
 
 - name: Create AWS Credential 
@@ -174,7 +174,7 @@
       security_token: "{{ lookup('ini', 'aws_security_token section=saml file=~/.aws/credentials') }}"
     tower_username: "{{ tower_username }}"
     tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true
 
 - name: Create AWS Inventory 
@@ -185,7 +185,7 @@
     state: present 
     tower_username: "{{ tower_username }}"
     tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true
 
 - name: Create AWS Inventory Source
@@ -208,7 +208,7 @@
           parent_group: "demo"
     tower_username: "{{ tower_username }}"
     tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: false
 
 - name: Create Ansible Demo Tower Project
@@ -219,7 +219,7 @@
     organization: Default 
     tower_username: "{{ tower_username }}"
     tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true
     scm_type: git 
     scm_url: https://github.com/corumj/ansible-demo.git
@@ -239,7 +239,7 @@
     state: "present"
     tower_username: "admin"
     tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true
 
 - name: Create Provision Template
@@ -257,7 +257,7 @@
     state: "present"
     tower_username: "admin"
     tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true
 
 - name: Create Deprovision Template
@@ -275,5 +275,5 @@
     state: "present"
     tower_username: "admin"
     tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true

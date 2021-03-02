@@ -43,7 +43,7 @@ http {
         listen [::1]:80 default_server;
 
         # If you have a domain name, this is where to add it
-        server_name ansible.{{ aws_user }}.adp.redhatgov.io;
+        server_name ansible.{{ aws_user }}.ade.redhatgov.io;
         keepalive_timeout 65;
 
         ssl_certificate /etc/tower/tower.cert;

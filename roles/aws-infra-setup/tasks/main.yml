@@ -108,5 +108,5 @@
   amazon.aws.ec2_key: 
     profile: "{{ aws_profile }}"
     name: "{{ aws_user }}-ansible-demo-key"
-    key_material: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    key_material: "{{ public_key }}"
     state: present

@@ -20,7 +20,7 @@
       profile: "{{ aws_profile }}"
       state: get 
       zone: redhatgov.io
-      record: "ansible.{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}.adp.redhatgov.io"
+      record: "ansible.{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}.ade.redhatgov.io"
       type: A
     register: record 
 

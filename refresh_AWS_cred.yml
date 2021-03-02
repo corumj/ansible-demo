@@ -35,5 +35,5 @@
         security_token: "{{ lookup('ini', 'aws_security_token section=saml file=~/.aws/credentials') }}"
       tower_username: "{{ tower_username }}"
       tower_password: "{{ admin_password }}"
-      tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+      tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
       tower_verify_ssl: true
