@@ -20,7 +20,7 @@
       profile: "{{ aws_profile }}"
     register: user
 
-  - name: Create AWS Credential 
+  - name: Update AWS Credential 
     vars:
       aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
     awx.awx.tower_credential:
