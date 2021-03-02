@@ -33,7 +33,7 @@
       - "Tower Credential"
       - "AWS"
     survey_enabled: yes 
-    survey_spec: "{{ lookup('template', 'deprovision.json.j2') }}"
+    survey_spec: "{{ lookup('template', 'deprovision.json.j2') | to_json }}"
     extra_vars:
       aws_profile: ''
     ask_variables_on_launch: yes
