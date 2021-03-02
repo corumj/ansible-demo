@@ -10,3 +10,8 @@
     - name: Deprovision Instance
       include_role:
         name: aws-ec2-deprovision 
+
+    - name: Update deprovision list 
+      include_role:
+        name: tower-setup 
+        tasks_from: deprovision-survey-list.yml
