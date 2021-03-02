@@ -1,8 +1,3 @@
-group_name: "{{ group_name }}"
-short_desc: "{{ short_desc }}"
-server_env: "{{ server_env }}" 
-server_os: "{{ server_os }}"
-business_domain_name: "{{ business_domain_name }}"
 {
   "name": "",
   "description": "",
@@ -46,7 +41,7 @@ business_domain_name: "{{ business_domain_name }}"
         "question_description": "Linux or Windows",
         "required": true,
         "type": "multiplechoice",
-        "variable": "server_os",
+        "variable": "survey_server_os",
         "min": null,
         "max": null,
         "default": "windows",
