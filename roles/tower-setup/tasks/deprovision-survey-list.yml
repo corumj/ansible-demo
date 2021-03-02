@@ -1,0 +1,48 @@
+---
+- name: Find AWS User information
+  amazon.aws.aws_caller_info:
+    profile: "{{ aws_profile | default('') }}"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+  register: user
+
+- name: Get list of instances for user as part of this demo 
+  community.aws.ec2_instance_info:
+    profile: "{{ aws_profile | default('') }}"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    filters:
+      instance-state-name: running 
+      tag:business_domain_name: Red Hat 
+      tag:demo: Ansible 
+      tag:user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+  register: ec2 
+
+# - name: debug 
+#   debug:
+#     msg: "{{ ec2 | json_query('instances[*].tags.short_desc') | difference(['tower']) | join('\n') }}"
+
+- name: Create Deprovision Template
+  vars:
+    aws_instances_short_desc: "{{ ec2 | json_query('instances[*].tags.short_desc') | difference(['tower']) | join('\n') }}"
+  awx.awx.tower_job_template:
+    name: "3. Deprovision"
+    job_type: "run"
+    inventory: AWS
+    project: Ansible Demo
+    playbook: "deprovision.yml"
+    credentials: 
+      - "Tower Credential"
+      - "AWS"
+    survey_enabled: yes 
+    survey_spec: "{{ lookup('file', 'deprovision.json') }}"
+    extra_vars:
+      aws_profile: ''
+    ask_variables_on_launch: yes
+    state: "present"
+    tower_username: "admin"
+    tower_password: "{{ admin_password }}"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    tower_verify_ssl: true

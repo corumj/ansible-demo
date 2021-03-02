@@ -1,0 +1,17 @@
+{
+  "name": "",
+  "description": "",
+  "spec": [
+    {
+        "question_name": "Select a server or servers to deprovision",
+        "question_description": "",
+        "required": true,
+        "type": "multiselect",
+        "variable": "survey_group_name",
+        "min": null,
+        "max": null,
+        "default": "",
+        "choices": "{{ aws_instances_short_desc }}"
+    }
+  ]
+}

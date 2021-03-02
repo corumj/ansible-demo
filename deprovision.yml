@@ -4,7 +4,7 @@
   connection: local 
   gather_facts: no
   vars:
-    short_desc: "{{ survey_short_desc | default('!tower')}}"
+    short_desc: "{{ survey_short_desc }}"
     business_domain_name: "{{ survey_business_domain_name | default('Red Hat') }}"
   tasks:
     - name: Deprovision Instance

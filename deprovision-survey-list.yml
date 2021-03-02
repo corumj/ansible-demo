@@ -1,0 +1,9 @@
+---
+- name: Update deprovision survey list 
+  hosts: localhost 
+  connection: local 
+  tasks:
+    - name: Update deprovision list 
+      include_role:
+        name: tower-setup 
+        tasks_from: deprovision-survey-list.yml
