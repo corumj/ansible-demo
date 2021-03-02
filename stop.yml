@@ -1,0 +1,30 @@
+---
+- name: Start Tower Instance
+  hosts: localhost
+  connection: local 
+  gather_facts: no
+  vars:
+    group_name: "tower"
+    short_desc: "tower"
+    server_env: "test" 
+    server_os: "linux"
+    business_domain_name: "Red Hat"
+  tasks:
+  - name: Find AWS User information
+    amazon.aws.aws_caller_info:
+      profile: "{{ aws_profile }}"
+      region: "{{ aws_region }}"
+      aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+      aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    register: user
+
+  - name: Stop Tower EC2 Instance 
+    amazon.aws.ec2:
+      profile: "{{ aws_profile }}"
+      instance_tags:
+        group_name: "tower"
+        short_desc: "tower"
+        server_env: "test" 
+        server_os: "linux"
+        business_domain_name: "Red Hat"
+      state: stopped
