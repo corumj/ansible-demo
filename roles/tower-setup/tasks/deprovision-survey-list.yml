@@ -42,7 +42,7 @@
       aws_profile: ''
     ask_variables_on_launch: yes
     state: "present"
-    tower_username: "admin"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
     tower_verify_ssl: true
