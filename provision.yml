@@ -29,3 +29,8 @@
         name: aws-ec2-provision 
       vars: 
         aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+
+    - name: Update deprovision list 
+      include_role:
+        name: tower-setup 
+        tasks_from: deprovision-survey-list.yml
