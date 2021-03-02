@@ -12,7 +12,10 @@
   tasks:
     - name: Find AWS User information
       amazon.aws.aws_caller_info:
-        profile: "{{ aws_profile }}"
+        profile: "{{ aws_profile | default('') }}"
+        region: "{{ aws_region }}"
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
       register: user
 
     - name: Provision Instance
