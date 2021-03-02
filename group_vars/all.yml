@@ -15,3 +15,6 @@ tower_installer_url: https://releases.ansible.com/ansible-tower/setup/ansible-to
 default_tower_url: https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-latest.tar.gz
 # aw_repo_url:
 tower_username: admin
+
+# Demo specific items 
+servicenow_git_branch: platform 
