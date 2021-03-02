@@ -1,20 +1,20 @@
 ---
-- name: Setup ServiceNow Tower Org 
-  tower_organization:
-    name: "ServiceNow"
-    description: "ServiceNow Templates"
-    state: present
-    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-    tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    tower_verify_ssl: true
+# - name: Setup ServiceNow Tower Org 
+#   tower_organization:
+#     name: "ServiceNow"
+#     description: "ServiceNow Templates"
+#     state: present
+#     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+#     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+#     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+#     tower_verify_ssl: true
 
 - name: Setup ServiceNow project 
   awx.awx.tower_project:
     name: ServiceNow 
     state: present
     wait: yes
-    organization: ServiceNow 
+    organization: Default 
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
@@ -31,7 +31,7 @@
     inventory: AWS
     project: ServiceNow
     playbook: "initialize.yml"
-    organization: ServiceNow 
+    organization: Default 
     credentials: 
       - "Tower Credential"
       - "AWS"
