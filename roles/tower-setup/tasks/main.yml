@@ -1,116 +1,116 @@
 ---
-# - name: Install packages
-#   include_tasks: package-dependencies.yml
+- name: Install packages
+  include_tasks: package-dependencies.yml
 
-# - name: Download Ansible Tower
-#   get_url:
-#     url: '{{ tower_installer_url | default(default_tower_url) }}'
-#     dest: /tmp/tower.tar.gz
+- name: Download Ansible Tower
+  get_url:
+    url: '{{ tower_installer_url | default(default_tower_url) }}'
+    dest: /tmp/tower.tar.gz
 
-# - name: Create directory for Ansible Tower
-#   file: path=/tmp/tower_install state=directory
+- name: Create directory for Ansible Tower
+  file: path=/tmp/tower_install state=directory
 
-# - name: Extract Ansible Tower install
-#   unarchive:
-#     src: /tmp/tower.tar.gz
-#     dest: /tmp/tower_install
-#     remote_src: true
-#     extra_opts: ['--strip-components=1', '--show-stored-names']
+- name: Extract Ansible Tower install
+  unarchive:
+    src: /tmp/tower.tar.gz
+    dest: /tmp/tower_install
+    remote_src: true
+    extra_opts: ['--strip-components=1', '--show-stored-names']
 
-# - name: template inventory file for Ansible Tower Install
-#   template:
-#     src: tower_install.j2
-#     dest: /tmp/tower_install/inventory
+- name: template inventory file for Ansible Tower Install
+  template:
+    src: tower_install.j2
+    dest: /tmp/tower_install/inventory
 
-# - name: run the Ansible Tower installer
-#   shell: ./setup.sh
-#   args:
-#     chdir: /tmp/tower_install
-#   async: 1400
-#   poll: 15
+- name: run the Ansible Tower installer
+  shell: ./setup.sh
+  args:
+    chdir: /tmp/tower_install
+  async: 1400
+  poll: 15
 
-# - name: wait for Ansible Tower to be up
-#   uri:
-#     url: https://localhost/api/v2/ping/
-#     method: GET
-#     user: admin
-#     password: "{{admin_password}}"
-#     validate_certs: false
-#   register: check2
-#   until: check2.json is defined
-#   retries: 10
-#   delay: 30
+- name: wait for Ansible Tower to be up
+  uri:
+    url: https://localhost/api/v2/ping/
+    method: GET
+    user: admin
+    password: "{{admin_password}}"
+    validate_certs: false
+  register: check2
+  until: check2.json is defined
+  retries: 10
+  delay: 30
 
-# - name: Display /api/v2/ping results
-#   debug:
-#     msg: '{{ check2.json }}'
+- name: Display /api/v2/ping results
+  debug:
+    msg: '{{ check2.json }}'
 
-# - name: install ansible-tower-cli and requests
-#   become: true
-#   pip:
-#     name:
-#       - ansible-tower-cli
-#       - "requests==2.6.0"
-#     state: latest
+- name: install ansible-tower-cli and requests
+  become: true
+  pip:
+    name:
+      - ansible-tower-cli
+      - "requests==2.6.0"
+    state: latest
 
-# - name: Install venv
-#   include_tasks: venv.yml
+- name: Install venv
+  include_tasks: venv.yml
 
-# - name: Load manifest into variable
-#   local_action:
-#     module: slurp
-#     src: "{{ playbook_dir }}/files/manifest.zip"
-#   register: manifest_file
-#   become: false
+- name: Load manifest into variable
+  local_action:
+    module: slurp
+    src: "{{ playbook_dir }}/files/manifest.zip"
+  register: manifest_file
+  become: false
 
-# - name: Post manifest file
-#   uri:
-#     url: https://{{ansible_host}}/api/v2/config/
-#     method: POST
-#     user: admin
-#     password: "{{ admin_password }}"
-#     body: '{ "eula_accepted": true, "manifest": "{{ manifest_file.content }}" }'
-#     body_format: json
-#     validate_certs: false
-#     force_basic_auth: true
+- name: Post manifest file
+  uri:
+    url: https://{{ansible_host}}/api/v2/config/
+    method: POST
+    user: admin
+    password: "{{ admin_password }}"
+    body: '{ "eula_accepted": true, "manifest": "{{ manifest_file.content }}" }'
+    body_format: json
+    validate_certs: false
+    force_basic_auth: true
 
-# - name: Setup Route 53 for domain name 
-#   community.aws.route53:
-#     profile: "{{ aws_profile }}"
-#     state: present 
-#     zone: redhatgov.io
-#     record: "ansible.{{ aws_user }}.adp.redhatgov.io"
-#     type: A
-#     value: "{{ tower_ip }}"
-#     wait: yes
-#     overwrite: yes
-#   become: no
-#   delegate_to: localhost
+- name: Setup Route 53 for domain name 
+  community.aws.route53:
+    profile: "{{ aws_profile }}"
+    state: present 
+    zone: redhatgov.io
+    record: "ansible.{{ aws_user }}.adp.redhatgov.io"
+    type: A
+    value: "{{ tower_ip }}"
+    wait: yes
+    overwrite: yes
+  become: no
+  delegate_to: localhost
 
-# - name: Configure Nginx with FQDN 
-#   template:
-#     src: nginx.conf.j2 
-#     dest: /etc/nginx/nginx.conf 
-#     validate: /usr/sbin/nginx -t -c %s 
-#   register: nginx 
+- name: Configure Nginx with FQDN 
+  template:
+    src: nginx.conf.j2 
+    dest: /etc/nginx/nginx.conf 
+    validate: /usr/sbin/nginx -t -c %s 
+  register: nginx 
 
-# - name: Restart nginx 
-#   service:
-#     name: nginx 
-#     state: restarted 
-#   when: nginx.changed 
+- name: Restart nginx 
+  service:
+    name: nginx 
+    state: restarted 
+  when: nginx.changed 
 
-# - name: Install certbot and requirements 
-#   package:
-#     name:
-#       - certbot 
-#       - python3-certbot-nginx 
-#     state: present 
+- name: Install certbot and requirements 
+  package:
+    name:
+      - certbot 
+      - python3-certbot-nginx 
+    state: present 
 
-# - name: Use certbot to setup certificate 
-#   shell: "certbot --nginx -d ansible.{{ aws_user }}.adp.redhatgov.io --non-interactive --agree-tos -m {{ aws_user }}@redhat.com"
-#   args:
-#     creates: /etc/letsencrypt/live/ansible.{{ aws_user }}.adp.redhatgov.io/fullchain.pem
+- name: Use certbot to setup certificate 
+  shell: "certbot --nginx -d ansible.{{ aws_user }}.adp.redhatgov.io --non-interactive --agree-tos -m {{ aws_user }}@redhat.com"
+  args:
+    creates: /etc/letsencrypt/live/ansible.{{ aws_user }}.adp.redhatgov.io/fullchain.pem
 
 - name: Setup Tower Credential 
   awx.awx.tower_credential:
@@ -123,10 +123,60 @@
       username: "admin"
       password: "{{ admin_password }}"
       host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
-    tower_username: "admin"
+    tower_username: "{{ tower_username }}"
     tower_password: "{{ admin_password }}"
     tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
     tower_verify_ssl: true
+
+- name: Create AWS Credential 
+  awx.awx.tower_credential:
+    state: present
+    name: AWS
+    description: AWS Credential from saml 
+    organization: Default 
+    credential_type: Amazon Web Services
+    inputs:
+      username: "{{ lookup('ini', 'aws_access_key_id section=saml file=~/.aws/credentials') }}"
+      password: "{{ lookup('ini', 'aws_secret_access_key section=saml file=~/.aws/credentials') }}"
+      security_token: "{{ lookup('ini', 'aws_security_token section=saml file=~/.aws/credentials') }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ admin_password }}"
+    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_verify_ssl: true
+
+- name: Create AWS Inventory 
+  awx.awx.tower_inventory: 
+    name: AWS
+    description: AWS Inventory 
+    organization: Default 
+    state: present 
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ admin_password }}"
+    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_verify_ssl: true
+
+- name: Create AWS Inventory Source
+  awx.awx.tower_inventory_source:
+    state: present  
+    name: AWS 
+    description: AWS inventory source 
+    inventory: AWS  
+    credential: AWS   
+    overwrite: True  
+    update_on_launch: True  
+    source: ec2  
+    source_vars: 
+      filters:
+        tag:demo: Ansible 
+        tag:user: "{{ aws_user }}"
+      keyed_groups:
+        - key: tags['group_name']
+          prefix: tag 
+          parent_group: "demo"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ admin_password }}"
+    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_verify_ssl: false
 
 - name: Create Ansible Demo Tower Project
   awx.awx.tower_project:
@@ -134,7 +184,7 @@
     state: present
     wait: yes
     organization: Default 
-    tower_username: "admin"
+    tower_username: "{{ tower_username }}"
     tower_password: "{{ admin_password }}"
     tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
     tower_verify_ssl: true
@@ -153,6 +203,24 @@
       - "Tower Credential"
     survey_enabled: yes 
     survey_spec: "{{ lookup('file', 'choose-demo.json') }}"
+    state: "present"
+    tower_username: "admin"
+    tower_password: "{{ admin_password }}"
+    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_verify_ssl: true
+
+- name: Create Choose Your demo Template
+  awx.awx.tower_job_template:
+    name: "2. Provision Servers"
+    job_type: "run"
+    inventory: AWS
+    project: Ansible Demo
+    playbook: "provision.yml"
+    credentials: 
+      - "Tower Credential"
+      - "AWS"
+    survey_enabled: yes 
+    survey_spec: "{{ lookup('file', 'provision.json') }}"
     state: "present"
     tower_username: "admin"
     tower_password: "{{ admin_password }}"
