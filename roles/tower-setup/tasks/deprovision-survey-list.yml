@@ -20,10 +20,6 @@
       tag:user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
   register: ec2 
 
-# - name: debug 
-#   debug:
-#     msg: "{{ ec2 | json_query('instances[*].tags.short_desc') | difference(['tower']) | join('\n') }}"
-
 - name: Create Deprovision Template
   vars:
     aws_instances_short_desc: "{{ ec2 | json_query('instances[*].tags.short_desc') | difference(['tower']) | join('\n') }}"
@@ -37,7 +33,7 @@
       - "Tower Credential"
       - "AWS"
     survey_enabled: yes 
-    survey_spec: "{{ lookup('file', 'deprovision.json') }}"
+    survey_spec: "{{ lookup('template', 'deprovision.json.j2') }}"
     extra_vars:
       aws_profile: ''
     ask_variables_on_launch: yes
