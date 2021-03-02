@@ -20,6 +20,7 @@
     tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true
     scm_type: git 
+    scm_branch: "{{ servicenow_git_branch }}"
     scm_url: https://github.com/corumj/ansible-servicenow-demo.git
     scm_update_on_launch: yes 
 
