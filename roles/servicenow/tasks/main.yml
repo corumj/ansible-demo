@@ -1,0 +1,43 @@
+---
+- name: Setup ServiceNow Tower Org 
+  tower_organization:
+    name: "ServiceNow"
+    description: "ServiceNow Templates"
+    state: present
+    tower_username: "admin"
+    tower_password: "{{ admin_password }}"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    tower_verify_ssl: true
+
+- name: Setup ServiceNow project 
+  awx.awx.tower_project:
+    name: ServiceNow 
+    state: present
+    wait: yes
+    organization: ServiceNow 
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ admin_password }}"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    tower_verify_ssl: true
+    scm_type: git 
+    scm_url: https://github.com/corumj/ansible-servicenow-demo.git
+    scm_update_on_launch: yes 
+
+- name: Setup ServiceNow - Initialize job template
+  awx.awx.tower_job_template:
+    name: "ServiceNow - Initialize Demo"
+    job_type: "run"
+    inventory: AWS
+    project: ServiceNow
+    playbook: "initialize.yml"
+    organization: ServiceNow 
+    credentials: 
+      - "Tower Credential"
+      - "AWS"
+    survey_enabled: yes 
+    survey_spec: "{{ lookup('file', 'servicenow.json') }}"
+    state: "present"
+    tower_username: "admin"
+    tower_password: "{{ admin_password }}"
+    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    tower_verify_ssl: true
