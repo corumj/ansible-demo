@@ -21,8 +21,6 @@
   register: ec2 
 
 - name: Create Deprovision Template
-  vars:
-    aws_instances_short_desc: "{{ ec2 | json_query('instances[*].tags.short_desc') | difference(['tower']) | join('\n') }}"
   awx.awx.tower_job_template:
     name: "3. Deprovision"
     job_type: "run"
@@ -47,7 +45,7 @@
               "min": null,
               "max": null,
               "default": "",
-              "choices": "{{ aws_instances_short_desc }}"
+              "choices": "{{ ec2 | json_query('instances[*].tags.short_desc') | difference(['tower']) | join('\n') }}"
           }
         ]
       }
