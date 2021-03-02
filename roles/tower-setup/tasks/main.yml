@@ -272,6 +272,9 @@
       - "Tower Credential"
       - "AWS"
       - "AWS Windows"
+    extra_vars:
+      aws_profile: ''
+    ask_variables_on_launch: yes
     survey_enabled: yes 
     survey_spec: "{{ lookup('file', 'provision.json') }}"
     state: "present"
@@ -292,6 +295,9 @@
       - "AWS"
     # survey_enabled: yes 
     # survey_spec: "{{ lookup('file', 'deprovision.json') }}"
+    extra_vars:
+      aws_profile: ''
+    ask_variables_on_launch: yes
     state: "present"
     tower_username: "admin"
     tower_password: "{{ admin_password }}"
