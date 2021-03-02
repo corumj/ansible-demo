@@ -1,0 +1,22 @@
+---
+- name: Setup Tower infrastructure 
+  hosts: localhost
+  connection: local 
+  gather_facts: no
+  vars:
+    group_name: "{{ survey_group_name }}"
+    short_desc: "{{ survey_short_desc }}"
+    server_env: "{{ survey_server_env }}" 
+    server_os: "{{ survey_server_os }}"
+    business_domain_name: "{{ survey_business_domain_name | default('Red Hat') }}"
+  tasks:
+    - name: Find AWS User information
+      amazon.aws.aws_caller_info:
+        profile: "{{ aws_profile }}"
+      register: user
+
+    - name: Provision Instance
+      include_role:
+        name: aws-ec2-provision 
+      vars: 
+        aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
