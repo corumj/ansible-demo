@@ -13,7 +13,15 @@
     - name: prompt_admin_password
       prompt: Set your initial Tower admin password
       private: yes
+    - name: prompt_admin_password_confirm
+      prompt: Confirm your initial Tower admin password
+      private: yes
   tasks:
+  - name: Check if tower admin passwords match
+    fail:
+      msg: Admin passwords do not match, please rerun setup.sh and reenter initial password 
+    when: prompt_admin_password != prompt_admin_password_confirm
+
   - name: Find AWS User information
     amazon.aws.aws_caller_info:
       profile: "{{ aws_profile }}"
