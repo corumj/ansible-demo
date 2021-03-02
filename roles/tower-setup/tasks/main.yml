@@ -283,23 +283,23 @@
     tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true
 
-- name: Create Deprovision Template
-  awx.awx.tower_job_template:
-    name: "3. Deprovision"
-    job_type: "run"
-    inventory: AWS
-    project: Ansible Demo
-    playbook: "deprovision.yml"
-    credentials: 
-      - "Tower Credential"
-      - "AWS"
-    # survey_enabled: yes 
-    # survey_spec: "{{ lookup('file', 'deprovision.json') }}"
-    extra_vars:
-      aws_profile: ''
-    ask_variables_on_launch: yes
-    state: "present"
-    tower_username: "admin"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_verify_ssl: true
+# - name: Create Deprovision Template
+#   awx.awx.tower_job_template:
+#     name: "3. Deprovision"
+#     job_type: "run"
+#     inventory: AWS
+#     project: Ansible Demo
+#     playbook: "deprovision.yml"
+#     credentials: 
+#       - "Tower Credential"
+#       - "AWS"
+#     # survey_enabled: yes 
+#     # survey_spec: "{{ lookup('file', 'deprovision.json') }}"
+#     extra_vars:
+#       aws_profile: ''
+#     ask_variables_on_launch: yes
+#     state: "present"
+#     tower_username: "admin"
+#     tower_password: "{{ admin_password }}"
+#     tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+#     tower_verify_ssl: true
