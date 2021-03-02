@@ -1,0 +1,19 @@
+---
+- name: Setup Tower infrastructure 
+  hosts: localhost
+  connection: local 
+  gather_facts: no
+  vars:
+    short_desc: "{{ survey_short_desc | default('!tower')}}"
+    business_domain_name: "{{ survey_business_domain_name | default('Red Hat') }}"
+  tasks:
+    - name: Find AWS User information
+      amazon.aws.aws_caller_info:
+        profile: "{{ aws_profile }}"
+      register: user
+
+    - name: Provision Instance
+      include_role:
+        name: aws-ec2-deprovision 
+      vars: 
+        aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"

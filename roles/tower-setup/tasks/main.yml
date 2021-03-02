@@ -128,6 +128,39 @@
     tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
     tower_verify_ssl: true
 
+- name: Create AWS Windows Machine credential 
+  awx.awx.tower_credential:
+    state: present 
+    name: AWS Windows 
+    description: AWS Windows Machine Credential 
+    organization: Default 
+    credential_type: Machine 
+    inputs:
+      username: administrator
+      password: "{{ admin_password }}"
+      become_method: runas 
+      become_username: Administrator 
+      become_password: "{{ admin_password }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ admin_password }}"
+    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_verify_ssl: true
+
+- name: Create AWS Linux Machine credential 
+  awx.awx.tower_credential:
+    state: present 
+    name: AWS Linux 
+    description: AWS Linux Machine Credential 
+    organization: Default 
+    credential_type: Machine 
+    inputs:
+      username: ec2-user
+      ssh_key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ admin_password }}"
+    tower_host: "https://ansible.{{ aws_user }}.adp.redhatgov.io"
+    tower_verify_ssl: true
+
 - name: Create AWS Credential 
   awx.awx.tower_credential:
     state: present
@@ -211,7 +244,7 @@
 
 - name: Create Choose Your demo Template
   awx.awx.tower_job_template:
-    name: "2. Provision Servers"
+    name: "2. Provision"
     job_type: "run"
     inventory: AWS
     project: Ansible Demo

@@ -1,5 +1,5 @@
 --- 
-- name: Deprovision ec2 Windows instance 
+- name: Deprovision ec2 instance 
   community.aws.ec2_instance:
     profile: "{{ aws_profile }}"
     state: absent
