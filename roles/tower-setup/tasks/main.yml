@@ -252,6 +252,7 @@
     credentials: 
       - "Tower Credential"
       - "AWS"
+      - "AWS Windows"
     survey_enabled: yes 
     survey_spec: "{{ lookup('file', 'provision.json') }}"
     state: "present"
