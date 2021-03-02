@@ -41,7 +41,7 @@
               "question_description": "",
               "required": true,
               "type": "multiselect",
-              "variable": "survey_group_name",
+              "variable": "survey_short_desc",
               "min": null,
               "max": null,
               "default": "",
