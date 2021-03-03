@@ -45,9 +45,11 @@
         tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
         tower_verify_ssl: true
 
+- name: Set Windows host facts 
+  hosts: tag_windows 
+  tasks:
     - name: Set connection facts for windows hosts 
       set_fact:
         ansible_port: 5986
         ansible_connection: winrm
         ansible_winrm_server_cert_validation: ignore
-      delegate_to: tag_windows
