@@ -131,7 +131,7 @@
 - name: Create Windows group 
   awx.awx.tower_group:
     state: present 
-    name: tag_windows 
+    name: windows 
     description: group for windows connection info 
     variables:
       ansible_port: 5986
