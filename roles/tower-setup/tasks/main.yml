@@ -41,6 +41,13 @@
   retries: 10
   delay: 30
 
+- name: Set Ansible to start after reboot 
+  service:
+    name: ansible-tower 
+    enabled: yes 
+    state: started 
+    
+
 - name: Display /api/v2/ping results
   debug:
     msg: '{{ check2.json }}'
@@ -82,6 +89,7 @@
     record: "ansible.{{ aws_user }}.ade.redhatgov.io"
     type: A
     value: "{{ tower_ip }}"
+    ttl: 300
     wait: yes
     overwrite: yes
   become: no
