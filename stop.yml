@@ -21,6 +21,7 @@
   - name: Stop Tower EC2 Instance 
     amazon.aws.ec2:
       profile: "{{ aws_profile }}"
+      region: "{{ aws_region }}"
       instance_tags:
         group_name: "tower"
         short_desc: "tower"
