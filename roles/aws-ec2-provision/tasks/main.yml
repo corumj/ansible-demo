@@ -24,17 +24,6 @@
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
       register: ec2 
-
-    - name: refresh 
-      meta: refresh_inventory 
-
-    - name: Set connection facts for windows hosts 
-      set_fact:
-        ansible_port: 5986
-        ansible_connection: winrm
-        ansible_winrm_server_cert_validation: ignore
-      delegate_to: tag_windows
-      
   when: server_os == 'windows'
 
 - name: Provision ec2 Linux instance 
