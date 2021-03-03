@@ -21,6 +21,7 @@
   - name: Stop Tower EC2 Instance 
     amazon.aws.ec2:
       profile: "{{ aws_profile }}"
+      region: "{{ aws_region }}"
       instance_tags:
         group_name: "tower"
         short_desc: "tower"
@@ -28,4 +29,21 @@
         server_os: "linux"
         business_domain_name: "Red Hat"
       state: running
+    register: ec2
+
+  - name: Setup Route 53 for domain name 
+    community.aws.route53:
+      profile: "{{ aws_profile }}"
+      state: present 
+      zone: redhatgov.io
+      record: "ansible.{{ aws_user }}.ade.redhatgov.io"
+      type: A
+      value: "{{ ec2.instances[0].public_ip_address }}"
+      wait: yes
+      overwrite: yes
+    become: no
+    delegate_to: localhost
       
+  - name: Message 
+    debug:
+      msg: "It will take around 5 minutes for the Route 53 domain to update before you can access tower"
