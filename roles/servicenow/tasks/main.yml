@@ -92,8 +92,6 @@
   awx.awx.tower_role:
     user: servicenow 
     target_team: ServiceNow
-    job_templates:
-      - SNOW- Initialize Demo
     role: member 
     state: present
 
