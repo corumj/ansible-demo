@@ -10,7 +10,7 @@
     tower_verify_ssl: true
 
 - name: Create a credential for Galaxy 
-  awx.awx.tower_credentialL:
+  awx.awx.tower_credential:
     name: ServiceNow Galaxy 
     description: Credential for SNOW org to access Galaxy
     organization: ServiceNow
