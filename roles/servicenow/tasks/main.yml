@@ -85,6 +85,7 @@
   awx.awx.tower_role:
     team: ServiceNow
     project: ServiceNow
+    organization: ServiceNow
     role: project_admin
     state: present
 
