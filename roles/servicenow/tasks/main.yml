@@ -102,3 +102,5 @@
     executable: /usr/bin/pip3.6
   become: yes
   become_user: root
+  delegate_to: localhost
+  connection: local
