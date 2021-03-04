@@ -1,14 +1,4 @@
 ---
-# - name: Setup ServiceNow Tower Org 
-#   tower_organization:
-#     name: "ServiceNow"
-#     description: "ServiceNow Templates"
-#     state: present
-#     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-#     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-#     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
-#     tower_verify_ssl: true
-
 - name: Setup ServiceNow project 
   awx.awx.tower_project:
     name: ServiceNow 
@@ -77,7 +67,7 @@
 - name: Add ServiceNow user to team 
   tower_role:
     user: servicenow 
-    target_team: ServiceNow 
+    target_team: ServiceNow
     role: member 
     state: present
 
