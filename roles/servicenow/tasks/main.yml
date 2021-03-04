@@ -1,10 +1,34 @@
 ---
+- name: Create tower organization
+  awx.awx.tower_organization:
+    name: ServiceNow
+    description: "ServiceNow admins"
+    state: present
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    tower_verify_ssl: true
+
+- name: Create a credential for Galaxy 
+  awx.awx.tower_credentialL:
+    name: ServiceNow Galaxy 
+    description: Credential for SNOW org to access Galaxy
+    organization: ServiceNow
+    credential_type: Ansible Galaxy/Automation Hub API Token
+    inputs:
+      url: https://galaxy.ansible.com/
+    state: present
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    tower_verify_ssl: true
+
 - name: Setup ServiceNow project 
   awx.awx.tower_project:
     name: ServiceNow 
     state: present
     wait: yes
-    organization: Default 
+    organization: ServiceNow 
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
@@ -16,12 +40,12 @@
 
 - name: Setup ServiceNow - Initialize job template
   awx.awx.tower_job_template:
-    name: "ServiceNow - Initialize Demo"
+    name: "SNOW- Initialize Demo"
     job_type: "run"
     inventory: AWS
     project: ServiceNow
     playbook: "initialize.yml"
-    organization: Default 
+    organization: ServiceNow 
     credentials: 
       - "Tower Credential"
       - "AWS"
@@ -34,10 +58,10 @@
     tower_verify_ssl: true
 
 - name: Create tower team
-  tower_team:
+  awx.awx.tower_team:
     name: ServiceNow
     description: ServiceNow administrators
-    organization: Default
+    organization: ServiceNow
     state: present
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
@@ -45,7 +69,7 @@
     tower_verify_ssl: true
 
 - name: Add ServiceNow user
-  tower_user:
+  awx.awx.tower_user:
     username: servicenow
     password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     email: ServiceNow@example.local
@@ -58,14 +82,14 @@
     tower_verify_ssl: true
 
 - name: promote ServiceNow team to ServiceNow project admin
-  tower_role:
+  awx.awx.tower_role:
     team: ServiceNow
     project: ServiceNow
     role: project_admin
     state: present
 
 - name: Add ServiceNow user to team 
-  tower_role:
+  awx.awx.tower_role:
     user: servicenow 
     target_team: ServiceNow
     role: member 
