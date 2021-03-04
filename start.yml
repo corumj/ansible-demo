@@ -18,17 +18,18 @@
       aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
     register: user
 
-  - name: Stop Tower EC2 Instance 
-    amazon.aws.ec2:
+  - name: Start Tower EC2 Instance 
+    community.aws.ec2_instance:
       profile: "{{ aws_profile }}"
       region: "{{ aws_region }}"
-      instance_tags:
-        group_name: "tower"
-        short_desc: "tower"
-        server_env: "test" 
-        server_os: "linux"
-        business_domain_name: "Red Hat"
+      filters:
+        tag:group_name: "tower"
+        tag:short_desc: "tower"
+        tag:server_env: "test" 
+        tag:server_os: "linux"
+        tag:business_domain_name: "Red Hat"
       state: running
+      wait: yes
     register: ec2
 
   - name: Setup Route 53 for domain name 
@@ -36,8 +37,9 @@
       profile: "{{ aws_profile }}"
       state: present 
       zone: redhatgov.io
-      record: "ansible.{{ aws_user }}.ade.redhatgov.io"
+      record: "ansible.{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}.ade.redhatgov.io"
       type: A
+      ttl: 300
       value: "{{ ec2.instances[0].public_ip_address }}"
       wait: yes
       overwrite: yes
@@ -46,4 +48,6 @@
       
   - name: Message 
     debug:
-      msg: "It will take around 5 minutes for the Route 53 domain to update before you can access tower"
+      msg: 
+        - "It will take around 5 minutes for the Route 53 domain to update before you can access tower"
+        - "Access Tower here: https://ansible.{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}.ade.redhatgov.io"
