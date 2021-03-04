@@ -85,7 +85,7 @@
   awx.awx.tower_role:
     team: ServiceNow
     organization: ServiceNow
-    role: admin
+    role: Project Admin
     state: present
 
 - name: Add ServiceNow user to team 
