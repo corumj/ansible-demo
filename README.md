@@ -4,6 +4,10 @@ This is to help provide a quick, single stop shop for Ansible demo's.  Please do
 It incorporates a variety of playbooks from other Git projects and is meant to be somewhat modular so it can grow with time.  
 
 # Demo includes: * some or all of this might not be implemented yet *
+  * ServiceNow
+    * Custom Credentials
+    * Tower API 
+    * Compliance (basic because we don't have all day in a demo to wait for a CIS standard to scan)
   * Using collections and roles
   * AWS Inventory & Provisioning
   * Config Management
