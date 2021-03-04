@@ -84,7 +84,6 @@
 - name: promote ServiceNow team to ServiceNow project admin
   awx.awx.tower_role:
     team: ServiceNow
-    project: ServiceNow
     organization: ServiceNow
     role: admin
     state: present
