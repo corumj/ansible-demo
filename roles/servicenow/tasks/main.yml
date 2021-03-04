@@ -95,6 +95,13 @@
     role: member 
     state: present
 
+- name: Add team permissions to init playbook
+  awx.awx.tower_role:
+    team: ServiceNow
+    job_template: SNOW- Initialize Demo
+    role: admin 
+    state: present
+
 - name: Install required python package
   pip:
     name: pysnow 
