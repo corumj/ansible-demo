@@ -43,6 +43,44 @@
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
     tower_verify_ssl: true
 
+- name: Create tower team
+  tower_team:
+    name: ServiceNow
+    description: ServiceNow administrators
+    organization: Default
+    state: present
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    tower_verify_ssl: true
+
+- name: Add ServiceNow user
+  tower_user:
+    username: servicenow
+    password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    email: ServiceNow@example.local
+    first_name: ServiceNow
+    last_name: User
+    state: present
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    tower_verify_ssl: true
+
+- name: promote ServiceNow team to ServiceNow project admin
+  tower_role:
+    team: ServiceNow
+    project: ServiceNow
+    role: project_admin
+    state: present
+
+- name: Add ServiceNow user to team 
+  tower_role:
+    user: servicenow 
+    target_team: ServiceNow 
+    role: member 
+    state: present
+
 - name: Install required python package
   pip:
     name: pysnow 
