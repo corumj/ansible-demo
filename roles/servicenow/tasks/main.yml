@@ -86,7 +86,7 @@
     team: ServiceNow
     project: ServiceNow
     organization: ServiceNow
-    role: admin_role
+    role: admin
     state: present
 
 - name: Add ServiceNow user to team 
