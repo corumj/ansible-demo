@@ -98,5 +98,4 @@
 - name: Install required python package
   pip:
     name: pysnow 
-    state: present 
-    executable: /usr/bin/pip3.6
+    state: present
