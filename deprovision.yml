@@ -7,9 +7,19 @@
     short_desc: "{{ survey_short_desc }}"
     business_domain_name: "{{ survey_business_domain_name | default('Red Hat') }}"
   tasks:
+    - name: Find AWS User information
+      amazon.aws.aws_caller_info:
+        profile: "{{ aws_profile | default('') }}"
+        region: "{{ aws_region }}"
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: user
+
     - name: Deprovision Instance
       include_role:
         name: aws-ec2-deprovision 
+      vars:
+        aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
 
     - name: Update deprovision list 
       include_role:
