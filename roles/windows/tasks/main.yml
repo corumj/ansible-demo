@@ -66,6 +66,7 @@
     playbook: "ad-controller-setup.yml"
     organization: Default 
     limit: tag_ad_server
+    ask_variables_on_launch: yes
     credentials: 
       - "Tower Credential"
       - "AWS"
