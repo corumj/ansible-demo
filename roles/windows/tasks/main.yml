@@ -59,21 +59,21 @@
 
 - name: Create tower team
   awx.awx.tower_team:
-    name: ServiceNow
-    description: ServiceNow administrators
-    organization: ServiceNow
+    name: Windows
+    description: Windows administrators
+    organization: Windows
     state: present
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
     tower_verify_ssl: true
 
-- name: Add ServiceNow user
+- name: Add Windows user
   awx.awx.tower_user:
-    username: servicenow
+    username: windows
     password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-    email: ServiceNow@example.local
-    first_name: ServiceNow
+    email: Windows@example.local
+    first_name: Windows
     last_name: User
     state: present
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
@@ -81,28 +81,28 @@
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
     tower_verify_ssl: true
 
-- name: promote ServiceNow team to ServiceNow project admin
+- name: promote Windows team to Windows project admin
   awx.awx.tower_role:
-    team: ServiceNow
-    organization: ServiceNow
+    team: Windows
+    organization: Windows
     role: project_admin
     state: present
 
-- name: Add ServiceNow user to team 
+- name: Add Windows user to team 
   awx.awx.tower_role:
-    user: servicenow 
-    target_team: ServiceNow
+    user: windows 
+    target_team: Windows
     role: member 
     state: present
 
 - name: Add team permissions to init playbook
   awx.awx.tower_role:
-    team: ServiceNow
-    job_template: SNOW- Initialize Demo
+    team: Windows
+    job_template: Windows - 1. Initialize Demo
     role: admin 
     state: present
 
-- name: Install required python package
-  pip:
-    name: pysnow 
-    state: present
+# - name: Install required python package
+#   pip:
+#     name: pysnow 
+#     state: present
