@@ -9,8 +9,8 @@
     #   register: user
 
     - name: Setup Windows demo  
-      debug:
-        msg: "Hello World, you chose to demo {{ demo_name }}"
+      include_role:
+        name: windows
       when: demo_name == 'Windows'
 
     - name: Setup Linux demo  
