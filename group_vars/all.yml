@@ -18,3 +18,4 @@ tower_username: admin
 
 # Demo specific items 
 servicenow_git_branch: platform 
+windows_git_branch: platform
