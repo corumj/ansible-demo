@@ -20,7 +20,7 @@
       tag:user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
   register: ec2 
 
-- name: Create Deprovision Template
+- name: Update  Deprovision Template
   awx.awx.tower_job_template:
     name: "3. Deprovision"
     job_type: "run"
