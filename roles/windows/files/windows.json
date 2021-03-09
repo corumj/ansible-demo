@@ -1,0 +1,28 @@
+{
+  "name": "",
+  "description": "",
+  "spec": [
+    {
+        "question_name": "Enter your Initial Windows Domain password (Must meet Active Directory Reqs).",
+        "question_description": "",
+        "required": true,
+        "type": "password",
+        "variable": "survey_win_init_password",
+        "min": 38,
+        "max": 50,
+        "default": "",
+        "choices": ""
+    },
+    {
+      "question_name": "Reenter your Initial Windows Domain password for verification.",
+      "question_description": "",
+      "required": true,
+      "type": "password",
+      "variable": "survey_win_init_password_verify",
+      "min": 38,
+      "max": 50,
+      "default": "",
+      "choices": ""
+  }
+  ]
+}
