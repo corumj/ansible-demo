@@ -15,7 +15,7 @@
     aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
     filters:
       instance-state-name: running 
-      tag:business_domain_name: Red Hat 
+      # tag:business_domain_name: Red Hat 
       tag:demo: Ansible 
       tag:user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
   register: ec2 
