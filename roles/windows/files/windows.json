@@ -8,7 +8,7 @@
         "required": true,
         "type": "password",
         "variable": "survey_win_init_password",
-        "min": 38,
+        "min": 8,
         "max": 50,
         "default": "",
         "choices": ""
@@ -19,7 +19,7 @@
       "required": true,
       "type": "password",
       "variable": "survey_win_init_password_verify",
-      "min": 38,
+      "min": 8,
       "max": 50,
       "default": "",
       "choices": ""
