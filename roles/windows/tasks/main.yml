@@ -57,6 +57,27 @@
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
     tower_verify_ssl: true
 
+- name: Create Windows - 2. Setup AD Controller template
+  awx.awx.tower_job_template:
+    name: "Windows - 2. Setup AD Controller template (auto runs after init)"
+    job_type: "run"
+    inventory: AWS
+    project: Windows
+    playbook: "ad-controller-setup.yml"
+    organization: Default 
+    limit: tag_ad_server
+    credentials: 
+      - "Tower Credential"
+      - "AWS"
+      - "AWS Windows"
+    # survey_enabled: yes 
+    # survey_spec: "{{ lookup('file', 'windows.json') }}"
+    state: "present"
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    tower_verify_ssl: true
+
 - name: Create tower team
   awx.awx.tower_team:
     name: Windows
