@@ -1,19 +1,19 @@
 ---
-- name: Create tower organization for Windows
-  awx.awx.tower_organization:
-    name: Windows
-    description: "Windows admins"
-    state: present
-    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-    tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    tower_verify_ssl: true
+# - name: Create tower organization for Windows
+#   awx.awx.tower_organization:
+#     name: Windows
+#     description: "Windows admins"
+#     state: present
+#     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+#     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+#     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+#     tower_verify_ssl: true
 
 - name: Create a credential for Galaxy in the Windows Org
   awx.awx.tower_credential:
     name: Windows Galaxy 
     description: Credential for Windows org to access Galaxy
-    organization: Windows
+    organization: Default
     credential_type: Ansible Galaxy/Automation Hub API Token
     inputs:
       url: https://galaxy.ansible.com/
@@ -28,7 +28,7 @@
     name: Windows 
     state: present
     wait: yes
-    organization: Windows 
+    organization: Default 
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
@@ -45,7 +45,7 @@
     inventory: AWS
     project: Windows
     playbook: "initialize.yml"
-    organization: Windows 
+    organization: Default 
     credentials: 
       - "Tower Credential"
       - "AWS"
@@ -61,7 +61,7 @@
   awx.awx.tower_team:
     name: Windows
     description: Windows administrators
-    organization: Windows
+    organization: Default
     state: present
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
@@ -84,7 +84,7 @@
 - name: promote Windows team to Windows project admin
   awx.awx.tower_role:
     team: Windows
-    organization: Windows
+    organization: Default
     role: project_admin
     state: present
 
