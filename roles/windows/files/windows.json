@@ -23,6 +23,17 @@
       "max": 50,
       "default": "",
       "choices": ""
+  },
+  {
+    "question_name": "Enter a 4-8 digit domain name for Windows environment",
+    "question_description": "{{ name }}.lab will be the full Windows domain name",
+    "required": true,
+    "type": "text",
+    "variable": "survey_business_domain_name",
+    "min": 4,
+    "max": 8,
+    "default": "",
+    "choices": ""
   }
   ]
 }
