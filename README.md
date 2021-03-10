@@ -21,7 +21,8 @@ This demo environment incorporates a variety of playbooks from other Git project
       * Multi-site IIS config 
       * Installing packages with Chocolatey
     * Active Directory Setup
-    * using win_dsc to take advantage of PowerShell DSC's.  
+    * using win_dsc to take advantage of PowerShell DSC's 
+      (https://github.com/corumj/ansible-windows-demo/blob/76c1e82da04e62504af159ce3e031b7c5d615803/roles/windows-ad-controller/tasks/main.yml#L160-L178)  
     * Configuring LDAP and pulling AD groups into Tower to manage users (coming soon)
   * Generic talking points
     * Using collections and roles
