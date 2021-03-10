@@ -4,17 +4,28 @@ This is to help provide a quick, single stop shop for Ansible demo's.  Please do
 This demo environment incorporates a variety of playbooks from other Git projects and is meant to be somewhat modular so it can grow with time.  
 
 # Demo includes: * some or all of this might not be implemented yet *
-  * ServiceNow
+  * ServiceNow (content from: https://github.com/corumj/ansible-servicenow-demo/tree/platform )
     * Custom Credentials
     * Tower API 
     * Compliance (basic because we don't have all day in a demo to wait for a CIS standard to scan)
-  * Using collections and roles
-  * AWS Inventory & Provisioning
-  * Config Management (coming soon)
-    * Nginx Install
-    * Templating Nginx Config file
-    * Patching 
-    * Templating SUDOERS file
+  * Linux (coming soon, hopefully)
+    * Config Management 
+      * Nginx Install
+      * Templating Nginx Config file
+      * Patching 
+      * Templating SUDOERS file
+  * Windows
+    * Config Management (coming soon)
+      * Windows Features on and off
+      * Compliance checking 
+      * Multi-site IIS config 
+      * Installing packages with Chocolatey
+    * Active Directory Setup
+    * using win_dsc to take advantage of PowerShell DSC's.  
+    * Configuring LDAP and pulling AD groups into Tower to manage users (coming soon)
+  * Generic talking points
+    * Using collections and roles
+    * AWS Dynamic Inventory & Provisioning
   
 
 # Requirements:
