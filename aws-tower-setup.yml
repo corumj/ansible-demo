@@ -39,15 +39,11 @@
     vars:
       aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
     
-  - name: call provision role and see if variable is available there 
+  - name: call provision role to create a RHEL 8 server to install Tower on 
     include_role:
       name: aws-ec2-provision 
     vars: 
       aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
-
-  - name: print ec2 variable 
-    debug:
-      var: ec2
 
   - name: Add the host 
     add_host:

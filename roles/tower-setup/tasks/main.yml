@@ -47,7 +47,6 @@
     enabled: yes 
     state: started 
     
-
 - name: Display /api/v2/ping results
   debug:
     msg: '{{ check2.json }}'
@@ -131,20 +130,6 @@
       username: "admin"
       password: "{{ admin_password }}"
       host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_verify_ssl: true
-
-- name: Create Windows group 
-  awx.awx.tower_group:
-    state: present 
-    name: windows 
-    description: group for windows connection info 
-    variables:
-      ansible_port: 5986
-      ansible_connection: winrm
-      ansible_winrm_server_cert_validation: ignore
     tower_username: "{{ tower_username }}"
     tower_password: "{{ admin_password }}"
     tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
@@ -290,24 +275,3 @@
     tower_password: "{{ admin_password }}"
     tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
     tower_verify_ssl: true
-
-# - name: Create Deprovision Template
-#   awx.awx.tower_job_template:
-#     name: "3. Deprovision"
-#     job_type: "run"
-#     inventory: AWS
-#     project: Ansible Demo
-#     playbook: "deprovision.yml"
-#     credentials: 
-#       - "Tower Credential"
-#       - "AWS"
-#     # survey_enabled: yes 
-#     # survey_spec: "{{ lookup('file', 'deprovision.json') }}"
-#     extra_vars:
-#       aws_profile: ''
-#     ask_variables_on_launch: yes
-#     state: "present"
-#     tower_username: "admin"
-#     tower_password: "{{ admin_password }}"
-#     tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-#     tower_verify_ssl: true

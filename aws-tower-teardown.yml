@@ -24,7 +24,7 @@
       type: A
     register: record 
 
-  - name: Remove Route 53 zone for demo tower instance 
+  - name: Remove Route 53 zone record for demo tower instance 
     community.aws.route53:
       profile: "{{ aws_profile }}"
       state: absent 
@@ -38,6 +38,8 @@
   - name: Teardown Tower EC2 Instance 
     include_role:
       name: aws-ec2-deprovision
+    vars:
+      aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
 
   - name: Teardown AWS infrastructure
     include_role:
