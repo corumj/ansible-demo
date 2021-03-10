@@ -14,7 +14,7 @@
         "choices": ""
     },
     {
-        "question_name": "Enter your ServiceNow username",
+        "question_name": "Enter your ServiceNow dev instance username",
         "question_description": "",
         "required": true,
         "type": "text",
@@ -25,7 +25,7 @@
         "choices": ""
     },
     {
-        "question_name": "Enter your ServiceNow password",
+        "question_name": "Enter your ServiceNow dev instance password",
         "question_description": "",
         "required": true,
         "type": "password",
