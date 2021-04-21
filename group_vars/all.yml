@@ -2,7 +2,7 @@
 aws_profile: saml
 aws_region: us-east-1 # must match your aws config profile - used for community.aws modules
 aws_linux_ami: ami-096fda3c22c1c990a # must be for your region
-aws_windows_ami: ami-0229f7666f517b31e # must be for your region
+aws_windows_ami: ami-0f93c815788872c5d # must be for your region
 aws_instance_type: t2.medium 
 
 # Key pair 
