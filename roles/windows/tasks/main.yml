@@ -123,8 +123,3 @@
     job_template: Windows - 1. Initialize Demo
     role: admin 
     state: present
-
-# - name: Install required python package
-#   pip:
-#     name: pysnow 
-#     state: present
