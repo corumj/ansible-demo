@@ -15,7 +15,7 @@
 
 - name: Create venv directory 
   file:
-    path: /opt/servicenow 
+    path: ~/.virtualenvs/servicenow 
     mode: "0755"
     group: awx 
     owner: awx 
