@@ -24,6 +24,7 @@
 - name: Install pysnow for SNOW integration 
   shell: yes | /usr/bin/python3.6 -m pip install pysnow
   become: yes
+  become_user: root
     
 - name: Setup ServiceNow project 
   awx.awx.tower_project:
