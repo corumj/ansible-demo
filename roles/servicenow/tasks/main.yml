@@ -19,7 +19,7 @@
     mode: "0755"
     group: awx 
     owner: awx 
-    stat: directory 
+    state: directory 
 
 - name: Install required python packages
   pip:
