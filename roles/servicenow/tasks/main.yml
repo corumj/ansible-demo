@@ -29,7 +29,7 @@
       - ansible==2.9.18
     state: present
     umask: "0022"
-    virtualenv: /opt/servicenow 
+    virtualenv: ~/.virtualenvs/servicenow
     
 - name: Setup ServiceNow project 
   awx.awx.tower_project:
