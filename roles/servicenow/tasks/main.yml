@@ -22,7 +22,8 @@
 #     executable: /usr/bin/pip3.6
 #     extra_args: --user
 - name: Install pysnow for SNOW integration 
-  shell: yes | /usr/bin/python3.6 -m pip install pysnow --user
+  shell: yes | /usr/bin/python3.6 -m pip install pysnow
+  become: yes
     
 - name: Setup ServiceNow project 
   awx.awx.tower_project:
