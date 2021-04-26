@@ -13,6 +13,24 @@
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
     tower_verify_ssl: true
 
+- name: Create venv directory 
+  file:
+    path: /opt/servicenow 
+    mode: "0755"
+    group: awx 
+    owner: awx 
+    stat: directory 
+
+- name: Install required python packages
+  pip:
+    name:
+      - psutil 
+      - pysnow 
+      - ansible==2.9.18
+    state: present
+    umask: "0022"
+    virtualenv: /opt/servicenow 
+    
 - name: Setup ServiceNow project 
   awx.awx.tower_project:
     name: ServiceNow 
@@ -92,10 +110,3 @@
     role: admin 
     state: present
 
-- name: Install required python package
-  pip:
-    name: pysnow 
-    state: present
-    umask: "0022"
-    virtualenv: /var/lib/awx/venv/servicenow
-    
