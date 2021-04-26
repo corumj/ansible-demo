@@ -97,5 +97,5 @@
     name: pysnow 
     state: present
     umask: "0022"
-    virtualenv: /var/lib/awx/venv/ansible
+    virtualenv: /var/lib/awx/venv/servicenow
     
