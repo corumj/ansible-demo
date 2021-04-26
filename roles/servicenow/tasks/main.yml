@@ -1,14 +1,4 @@
 ---
-# - name: Create tower organization
-#   awx.awx.tower_organization:
-#     name: ServiceNow
-#     description: "ServiceNow admins"
-#     state: present
-#     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-#     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-#     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
-#     tower_verify_ssl: true
-
 - name: Create a credential for Galaxy 
   awx.awx.tower_credential:
     name: ServiceNow Galaxy 
@@ -81,7 +71,7 @@
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
     tower_verify_ssl: true
 
-- name: promote ServiceNow team to ServiceNow project admin
+- name: Promote ServiceNow team to ServiceNow project admin
   awx.awx.tower_role:
     team: ServiceNow
     organization: Default
@@ -102,8 +92,9 @@
     role: admin 
     state: present
 
-# - name: Install required python package
-#   pip:
-#     name: pysnow 
-#     state: present
+- name: Install required python package
+  pip:
+    name: pysnow 
+    state: present
+    virtualenv: /var/lib/awx/venv/ansible
     
