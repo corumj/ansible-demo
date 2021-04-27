@@ -13,18 +13,11 @@
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
     tower_verify_ssl: true
 
-# - name: Install required python packages
-#   pip:
-#     name: pysnow 
-#     state: present
-#     # umask: "0022"
-#     # virtualenv: /var/lib/awx/venv/ansible
-#     executable: /usr/bin/pip3.6
-#     extra_args: --user
 - name: Install pysnow for SNOW integration 
-  shell: yes | /usr/bin/python3.6 -m pip install pysnow
+  shell: /usr/bin/python3.6 -m pip install pysnow
   become: yes
   become_user: root
+  delegate_to: localhost
     
 - name: Setup ServiceNow project 
   awx.awx.tower_project:
