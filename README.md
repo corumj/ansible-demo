@@ -14,8 +14,8 @@ This demo environment incorporates a variety of playbooks from other Git project
       * Templating Nginx Config file
       * Patching 
       * Templating SUDOERS file
-  * Windows
-    * Config Management (coming soon)
+  * Windows (coming soon hopefully)
+    * Config Management 
       * Windows Features on and off
       * Compliance checking 
       * Multi-site IIS config 
@@ -31,6 +31,7 @@ This demo environment incorporates a variety of playbooks from other Git project
 
 # Requirements:
   * AWS Account access with a boto profile (specify your profile name in `group_vars/all.yml`, default is `saml`)
+  * Update your ~/.aws/credentials file to use the correct region. It should be us-east-1 unless you are updating the AMI's for linux and windows as well.  It defaults to us-west-2 for some reason but once you change it, the aws-saml.py script we use at RH won't touch it again.  If you forget this, you might get a weird error that makes no sense about a missing 0 element array because... why not
   * SSH keys at ~/.ssh (you can update the `group_vars/all.yml` file with the path of the key you want to use, by default it's just ~/.ssh/id_rsa)
   * Manifest file for registering Tower, needs to be downloaded and placed in this repo's files folder `files/manifest.zip`  See obtaining a subscription manifest for Tower [here](https://docs.ansible.com/ansible-tower/latest/html/userguide/import_license.html#obtaining-a-subscriptions-manifest)
   * Python modules on your local machine running Ansible Core:
