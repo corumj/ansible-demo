@@ -13,11 +13,11 @@
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
     tower_verify_ssl: true
 
-- name: Install pysnow for SNOW integration 
-  shell: /usr/bin/python3.6 -m pip install pysnow
-  become: yes
-  become_user: root
-  delegate_to: localhost
+# - name: Install pysnow for SNOW integration 
+#   shell: /usr/bin/python3.6 -m pip install pysnow
+#   become: yes
+#   become_user: root
+#   delegate_to: localhost
     
 - name: Setup ServiceNow project 
   awx.awx.tower_project:
