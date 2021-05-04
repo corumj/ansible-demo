@@ -35,11 +35,26 @@
       value: "{{ record.set.value }}"
       wait: yes
 
-  - name: Teardown Tower EC2 Instance 
-    include_role:
-      name: aws-ec2-deprovision
-    vars:
-      aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+  # - name: Teardown Tower EC2 Instance 
+  #   include_role:
+  #     name: aws-ec2-deprovision
+  #   vars:
+  #     aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+
+  - name: Deprovision Demo EC2 Instances
+    community.aws.ec2_instance:
+      profile: "{{ aws_profile | default('') }}"
+      state: absent
+      filters:
+        # "tag:business_domain_name": "{{ business_domain_name }}"
+        "tag:user": "{{ aws_user }}"
+        # "tag:short_desc": "{{ short_desc }}"
+        "tag:demo": Ansible 
+        instance-state-name: running 
+      wait: yes
+      region: "{{ aws_region }}"
+      aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+      aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
 
   - name: Teardown AWS infrastructure
     include_role:
