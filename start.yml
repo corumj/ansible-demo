@@ -28,6 +28,7 @@
         tag:server_env: "test" 
         tag:server_os: "linux"
         tag:business_domain_name: "Red Hat"
+        tag:user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
       state: running
       wait: yes
     register: ec2
