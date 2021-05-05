@@ -1,0 +1,7 @@
+---
+- name: Setup Linux Demo
+  hosts: localhost 
+  connection: local 
+  tasks:
+  - debug:
+      msg: "Hello World"
