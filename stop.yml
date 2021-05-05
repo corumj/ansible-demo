@@ -28,4 +28,5 @@
         server_env: "test" 
         server_os: "linux"
         business_domain_name: "Red Hat"
+        user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
       state: stopped
