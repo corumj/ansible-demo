@@ -9,4 +9,4 @@
         pool: yes 
         iburst: yes 
   roles:
-    - role: rhel-system-roles.timesync
+    - role: redhat.rhel_system_roles.timesync
