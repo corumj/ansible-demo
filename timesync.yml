@@ -1,7 +1,7 @@
 ---
 - name: Use TimeSync RHEL System Role 
   hosts: all 
-  collection:
+  collections:
     - redhat.rhel_system_roles
   vars:
     timesync_ntp_servers:
@@ -9,4 +9,4 @@
         pool: yes 
         iburst: yes 
   roles:
-    - rhel-system-roles.timesync
+    - role: rhel-system-roles.timesync
