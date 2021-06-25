@@ -1,6 +1,6 @@
 ---
 # - name: Create tower organization for Windows
-#   awx.awx.tower_organization:
+#   awx.awx.organization:
 #     name: Windows
 #     description: "Windows admins"
 #     state: present
@@ -10,7 +10,7 @@
 #     tower_verify_ssl: true
 
 # - name: Create a credential for Galaxy in the Windows Org
-#   awx.awx.tower_credential:
+#   awx.awx.credential:
 #     name: Windows Galaxy 
 #     description: Credential for Windows org to access Galaxy
 #     organization: Default
@@ -24,7 +24,7 @@
 #     tower_verify_ssl: true
 
 - name: Setup Windows project 
-  awx.awx.tower_project:
+  awx.awx.project:
     name: Windows 
     state: present
     wait: yes
@@ -39,7 +39,7 @@
     scm_update_on_launch: yes 
 
 - name: Setup Windows - Initialize job template
-  awx.awx.tower_job_template:
+  awx.awx.job_template:
     name: "Windows - 1. Initialize Demo"
     job_type: "run"
     inventory: AWS
@@ -58,7 +58,7 @@
     tower_verify_ssl: true
 
 - name: Create Windows - 2. Setup AD Controller template
-  awx.awx.tower_job_template:
+  awx.awx.job_template:
     name: "Windows - 2. Setup AD Controller template (auto runs after init)"
     job_type: "run"
     inventory: AWS
@@ -80,7 +80,7 @@
     tower_verify_ssl: true
 
 - name: Create tower team
-  awx.awx.tower_team:
+  awx.awx.team:
     name: Windows
     description: Windows administrators
     organization: Default
@@ -91,7 +91,7 @@
     tower_verify_ssl: true
 
 - name: Add Windows user
-  awx.awx.tower_user:
+  awx.awx.user:
     username: windows
     password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     email: Windows@example.local
@@ -104,21 +104,21 @@
     tower_verify_ssl: true
 
 - name: promote Windows team to Windows project admin
-  awx.awx.tower_role:
+  awx.awx.role:
     team: Windows
     organization: Default
     role: project_admin
     state: present
 
 - name: Add Windows user to team 
-  awx.awx.tower_role:
+  awx.awx.role:
     user: windows 
     target_team: Windows
     role: member 
     state: present
 
 - name: Add team permissions to init playbook
-  awx.awx.tower_role:
+  awx.awx.role:
     team: Windows
     job_template: Windows - 1. Initialize Demo
     role: admin 

@@ -21,7 +21,7 @@
   register: ec2 
 
 - name: Update  Deprovision Template
-  awx.awx.tower_job_template:
+  awx.awx.job_template:
     name: "3. Deprovision"
     job_type: "run"
     inventory: AWS
