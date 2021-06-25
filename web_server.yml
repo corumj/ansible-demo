@@ -1,14 +1,13 @@
 ---
-  - name: Apache server installed
-    hosts: all
-    become: true
-    tasks:
-  
+- name: Apache server installed
+  hosts: all
+  become: true
+  tasks:
     - name: latest Apache version installed
       package:
         name: httpd
         state: latest
-  
+
     - name: Apache enabled and running
       service:
         name: httpd
