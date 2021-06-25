@@ -1,3 +1,7 @@
+> Due to some changes to the awx.awx module, you will need to update your
+> local copy of the collection as of 6/24/2021:
+> `ansible-galaxy collection install awx.awx --force`
+
 # Ansible Demo Environment
 This is to help provide a quick, single stop shop for Ansible demo's.  Please don't use any of these playbooks in production without lots of review - they were not meant to be to a production spec.  
 
