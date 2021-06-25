@@ -35,12 +35,12 @@
         name: tower-setup 
         tasks_from: deprovision-survey-list.yml
 
-    - name: Update AWS Inventory 
-      awx.awx.tower_inventory_source_update:
-        name: AWS  
-        inventory: AWS
-        wait: True
-        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-        tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
-        tower_verify_ssl: true
+    # - name: Update AWS Inventory 
+    #   awx.awx.tower_inventory_source_update:
+    #     name: AWS  
+    #     inventory: AWS
+    #     wait: True
+    #     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    #     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    #     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    #     tower_verify_ssl: true
