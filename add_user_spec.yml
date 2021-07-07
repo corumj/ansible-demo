@@ -33,4 +33,4 @@
 
     - name: print user dict
       debug:
-        var: "{{ user_dict }}"
+        var: "{{ hostvars['user_dict'] }}"
