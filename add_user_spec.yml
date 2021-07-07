@@ -11,7 +11,13 @@
       - pass
       - passreset    
   tasks:
-    - name: Print user list 
-      debug:
-        msg: "{{ keys | zip(item.split(',')) | list }}"
+    - name: create user list 
+      set_fact:
+        user_list: "{{ keys | zip(item.split(',')) | list }}"
       loop: "{{ users }}"
+    - name: create user dict 
+      set_fact:
+        user_dict: "{{ user_dict | default({}) | combine({item[0]: item[1]}) }}"
+    - name: print it 
+      debug:
+        var: user_dict
