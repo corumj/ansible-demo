@@ -2,8 +2,8 @@
 - name: Add user from JSON spec list 
   hosts: all 
   vars:
-    users: "{{ survey_users.split('\n') | to_json }}" 
+    users: "{{ survey_users.split('\n') }}" 
   tasks:
     - name: Print user list 
       debug:
-        var: "{{ users }}"
+        var: "{{ users | to_yaml }}"
