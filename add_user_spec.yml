@@ -15,10 +15,16 @@
       set_fact:
         user_list: "{{ keys | zip(item.split(',')) | list }}"
       loop: "{{ users }}"
+
+    - name: print user list 
+      debug:
+        var: user_list 
+        
     - name: create user dict 
       set_fact:
         user_dict: "{{ user_dict | default({}) | combine({item[0]: item[1]}) }}"
-      loop: user_list
+      loop: "{{ user_list }}"
+
     - name: print it 
       debug:
-        var: user_dict
+        var: "{{ user_dict }}"
