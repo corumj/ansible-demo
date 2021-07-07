@@ -22,7 +22,7 @@
 
     - name: loop over user list 
       debug: 
-        msg: "{{ item }}"
+        msg: "{{ item[0] }}"
       loop: "{{ user_list }}"
     # - name: create user dict 
     #   set_fact:
