@@ -31,6 +31,6 @@
         user_dict: "{{ user_dict | combine({item[0]: item[1]}) }}"
       loop: "{{ user_list }}"
 
-    # - name: print it 
-    #   debug:
-    #     var: "{{ user_dict }}"
+    - name: print user dict
+      debug:
+        var: "{{ user_dict }}"
