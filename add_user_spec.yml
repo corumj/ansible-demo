@@ -18,6 +18,7 @@
     - name: create user dict 
       set_fact:
         user_dict: "{{ user_dict | default({}) | combine({item[0]: item[1]}) }}"
+      loop: user_list
     - name: print it 
       debug:
         var: user_dict
