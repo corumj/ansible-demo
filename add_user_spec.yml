@@ -2,7 +2,7 @@
 - name: Add user from JSON spec list 
   hosts: all 
   vars:
-    users: "{{ survey_users.split('\n') | from_json }}" 
+    users: "{{ survey_users.split('\n') | to_json }}" 
   tasks:
     - name: Print user list 
       debug:
