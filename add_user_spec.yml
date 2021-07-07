@@ -10,7 +10,7 @@
       - expire 
       - pass
       - passreset    
-    user_dict: "{{ default({}) }}"
+    user_dict: {}
   tasks:
     - name: create user list 
       set_fact:
