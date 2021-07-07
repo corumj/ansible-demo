@@ -6,4 +6,4 @@
   tasks:
     - name: Print user list 
       debug:
-        var: "{{ users | to_yaml }}"
+        var: "{{ users | to_json }}"
