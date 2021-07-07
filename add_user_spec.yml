@@ -6,5 +6,5 @@
   tasks:
     - name: Print user list 
       debug:
-        msg: "{{ item.userid }}"
+        msg: "{{ item }}"
       loop: "{{ users }}"
