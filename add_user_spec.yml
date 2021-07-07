@@ -6,4 +6,4 @@
   tasks:
     - name: Print user list 
       debug:
-        var: users
+        var: users[0].userid
