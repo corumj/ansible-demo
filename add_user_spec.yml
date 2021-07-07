@@ -28,7 +28,7 @@
 
     - name: create user dict 
       set_fact:
-        user_dict: "{{ user_dict | combine({item[0]: item[1]}) }}"
+        user_dict: "{{ user_dict | combine({item[0]: item[1]}) | dict }}"
       loop: "{{ user_list }}"
 
     - name: print user dict
