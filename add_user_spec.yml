@@ -3,9 +3,15 @@
   hosts: all 
   vars:
     users: "{{ survey_users.split('\n') }}"
-      
+    keys:
+      - userid 
+      - username 
+      - newgroup 
+      - expire 
+      - pass
+      - passreset    
   tasks:
     - name: Print user list 
       debug:
-        msg: "{{ item.split(',') }}"
+        msg: "{{ keys | zip(item.split(',')) | list }}"
       loop: "{{ users }}"
