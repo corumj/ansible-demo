@@ -10,24 +10,26 @@
       - expire 
       - pass
       - passreset    
+    user_dict: default({})
   tasks:
     - name: create user list 
       set_fact:
         user_list: "{{ keys | zip(item.split(',')) | list }}"
       loop: "{{ users }}"
 
-    - name: print user list 
-      debug:
-        var: user_list 
+    # - name: print user list 
+    #   debug:
+    #     var: user_list 
 
-    - name: loop over user list 
-      debug: 
-        msg: "{{ item[0] }}"
+    # - name: loop over user list 
+    #   debug: 
+    #     msg: "{{ item[0] }}"
+      # loop: "{{ user_list }}"
+
+    - name: create user dict 
+      set_fact:
+        user_dict: "{{ user_dict | combine({item[0]: item[1]}) }}"
       loop: "{{ user_list }}"
-    # - name: create user dict 
-    #   set_fact:
-    #     user_dict: "{{ user_dict | default({}) | combine({item[0]: item[1]}) }}"
-    #   loop: "{{ user_list }}"
 
     # - name: print it 
     #   debug:
