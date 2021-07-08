@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>ImageryTileLayer - shaded relief renderer | Sample | ArcGIS API for JavaScript 4.18</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.18/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.18/"></script>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      #rendererDiv {
+        padding: 10px;
+        width: 280px;
+      }
+
+      .slider {
+        height: 40px;
+        width: 100%;
+      }
+    </style>
+
+    <script>
+      require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/ImageryTileLayer",
+        "esri/renderers/RasterShadedReliefRenderer",
+        "esri/widgets/Slider",
+        "esri/widgets/Expand",
+        "esri/tasks/support/MultipartColorRamp"
+      ], function(Map, MapView, ImageryTileLayer, RasterShadedReliefRenderer, Slider, Expand, MultipartColorRamp) {
+
+        // set the hillshade type for the shaded relief renderer
+        let hillshadeType = "traditional";
+        const url = "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer";
+
+        // create a colorRamp
+        const colorRamp = MultipartColorRamp.fromJSON({
+          type: "multipart",
+          colorRamps: [{
+            fromColor: [175, 240, 233],
+            toColor: [255, 255, 179]
+          }, {
+            fromColor: [255, 255, 179],
+            toColor: [0, 128, 64]
+          }, {
+            fromColor: [0, 128, 64],
+            toColor: [252, 186, 3]
+          }, {
+            fromColor: [252, 186, 3],
+            toColor: [128, 0, 0]
+          }, {
+            fromColor: [120, 0, 0],
+            toColor: [105, 48, 13]
+          }, {
+            fromColor: [105, 48, 13],
+            toColor: [171, 171, 171]
+          }, {
+            fromColor: [171, 171, 171],
+            toColor: [255, 252, 255]
+          }]
+        });
+
+        // set the shaded relief renderer parameters
+        const renderer = new RasterShadedReliefRenderer({
+          altitude: 45,
+          azimuth: 315,
+          hillshadeType: hillshadeType,
+          zFactor: 1,
+          scalingType: "adjusted",
+          colorRamp: colorRamp
+        });
+
+        const layer = new ImageryTileLayer({
+          url: url,
+          renderer: renderer
+        });
+
+        const map = new Map({
+          basemap: "gray-vector",
+          layers: [layer]
+        });
+
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 7,
+          center: [-111.819, 37.111]
+        });
+
+        const expand = new Expand({
+          view: view,
+          content: document.getElementById("rendererDiv"),
+          expanded: true,
+          expandIconClass: "esri-icon-settings2"
+        })
+
+        view.ui.add(expand, "top-right");
+
+        // this function will be called as user adjusts
+        // the renderer parameters via UI
+        function updateRenderer() {
+          var renderer = layer.renderer.clone();
+          var bandStat = layer.rasterInfo.statistics[0];
+          renderer.hillshadeType = hillshadeType;
+          switch (hillshadeType) {
+            case "traditional":
+              renderer.zFactor = zFactorSlider.values[0];
+              renderer.altitude = altitudeSlider.values[0];
+              renderer.azimuth = azimuthSlider.values[0];
+              break;
+            case "multi-directional":
+              renderer.zFactor = zFactorSlider.values[0];
+              break;
+          }
+          layer.renderer = renderer;
+        }
+
+        // listen to hillshade dropdown change event and update the renderer
+        // to reflect the hillshade type.
+        const hillshadeTypeSelect = document.getElementById("hillshadeType");
+        hillshadeTypeSelect.addEventListener("change", function() {
+          if (!layer.loaded) {
+            return;
+          }
+          hillshadeType = hillshadeTypeSelect.value;
+          changeHillshadeType(hillshadeType);
+        });
+
+        function changeHillshadeType(hillshadeType) {
+          switch (hillshadeType) {
+            case "traditional":
+              document.getElementById("traditionalStuff").style = "";
+              break;
+            case "multi-directional":
+             document.getElementById("traditionalStuff").style = "display: none;";
+              break;
+          }
+          updateRenderer();
+        }
+
+        // listen to z factor slider's thumb change and drag events
+        const zFactorLabel = document.getElementById("zFactorLabel");
+        const zFactorSlider = new Slider({
+          container: "zFactor-slider",
+          min: 1,
+          max: 10,
+          values: [1],
+          steps: 1,
+          snapOnClickEnabled: false,
+          visibleElements: {
+            labels: true,
+            rangeLabels: true
+          }
+        });
+        zFactorSlider.on(["thumb-change", "thumb-drag"], updateRenderer);
+
+        // listen to altitude slider's thumb change and drag events
+        const altitudeSlider = new Slider({
+          container: "altitude-slider",
+          min: 0,
+          max: 90,
+          values: [45],
+          steps: 1,
+          snapOnClickEnabled: false,
+          visibleElements: {
+            labels: true,
+            rangeLabels: true
+          }
+        });
+        altitudeSlider.on(["thumb-change", "thumb-drag"], updateRenderer);
+
+        // listen to altitude slider's thumb change and drag events
+        const azimuthSlider = new Slider({
+          container: "azimuth-slider",
+          min: 0,
+          max: 360,
+          values: [315],
+          steps: 5,
+          snapOnClickEnabled: false,
+          visibleElements: {
+            labels: true,
+            rangeLabels: true
+          }
+        });
+        azimuthSlider.on(["thumb-change", "thumb-drag"], updateRenderer);
+
+
+        // make the renderer grayscale or use the colorramp
+        var colorRampCheckBox = document.getElementById("tinted");
+        colorRampCheckBox.addEventListener("click", function(val) {
+          if (!layer.loaded) {
+            return;
+          }
+          var renderer = layer.renderer.clone();
+          renderer.colorRamp = colorRampCheckBox.checked ? colorRamp : null;
+          layer.renderer = renderer;
+        });
+
+        // adjust the scalingType for the renderer
+        var adjustBox = document.getElementById("adjust");
+        adjustBox.addEventListener("click", function(val) {
+          if (!layer.loaded) {
+            return;
+          }
+          var renderer = layer.renderer.clone();
+          renderer.scalingType = adjustBox.checked ? "adjusted" : "none";
+          layer.renderer = renderer;
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+    <div id="rendererDiv" class="esri-widget">
+      <h3 class="esri-widget__heading">Shaded Relief Parameters</h3>
+      <label class="esri-feature-form__label">Select type</label>
+      <select id="hillshadeType" class="esri-input esri-select">
+        <option value="traditional" selected>traditional</option>
+        <option value="multi-directional">multi-directional</option>
+      </select>
+      <br/>
+      <label id="zFactorLabel" class="esri-feature-form__label">Exaggeration Factor:</label>
+      <div id="zFactor-slider" class="slider"></div>
+      <div id="traditionalStuff">
+        <label id="altitudeLabel" class="esri-feature-form__label">Sun Altitude:</label>
+        <div id="altitude-slider" class="slider"></div>
+        <label id="azimuthLabel" class="esri-feature-form__label">Sun Azimuth:</label>
+        <div id="azimuth-slider" class="slider"></div>
+      </div>
+      <input type="checkbox" id="tinted" checked="true"/><label>Tinted hillshade</label><br/>
+      <input type="checkbox" id="adjust" checked="true"/><label>Adjust for large scale</label>
+    </div>
+  </body>
+</html>
