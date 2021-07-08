@@ -13,3 +13,8 @@
         name: httpd
         enabled: true
         state: started
+
+    - name: Copy basic website to server 
+      copy:
+        src: shaded-relief.html
+        dest: /var/www/html/index.html
