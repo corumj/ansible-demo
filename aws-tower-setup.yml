@@ -70,6 +70,9 @@
       package:
         name: '*'
         state: latest 
+
+    - name: Install pySNOW package for ServiceNow demos 
+      shell: yes | /usr/bin/python3.6 -m pip install pysnow 
         
     - name: Setup tower on AWS Instance 
       include_role:
