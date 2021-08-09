@@ -16,6 +16,7 @@
     - name: prompt_admin_password_confirm
       prompt: Confirm your initial Tower admin password
       private: yes
+      
   tasks:
   - name: Check if tower admin passwords match
     fail:
@@ -59,13 +60,8 @@
 - name: Install tower 
   hosts: tower 
   become: yes
+
   tasks:
-    # - name: import login credentials for Tower
-    #   include_vars: "{{lookup('first_found', login_info)}}"
-    #   vars:
-    #     login_info:
-    #       - 'setup_info.yml'
-    #       - 'login_info.yml'
     - name: Run updates 
       package:
         name: '*'

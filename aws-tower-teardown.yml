@@ -15,40 +15,12 @@
       profile: "{{ aws_profile }}"
     register: user
 
-  # - name: retrieve record for Tower's Route53 DNS zone 
-  #   community.aws.route53:
-  #     profile: "{{ aws_profile }}"
-  #     state: get 
-  #     zone: redhatgov.io
-  #     record: "ansible.{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}.ade.redhatgov.io"
-  #     type: A
-  #   register: record 
-
-  # - name: Remove Route 53 zone record for demo tower instance 
-  #   community.aws.route53:
-  #     profile: "{{ aws_profile }}"
-  #     state: absent 
-  #     zone: redhatgov.io
-  #     record: "{{ record.set.record }}"
-  #     ttl: "{{ record.set.ttl }}"
-  #     type: "{{ record.set.type }}"
-  #     value: "{{ record.set.value }}"
-  #     wait: yes
-
-  # - name: Teardown Tower EC2 Instance 
-  #   include_role:
-  #     name: aws-ec2-deprovision
-  #   vars:
-  #     aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
-
   - name: Deprovision Demo EC2 Instances
     community.aws.ec2_instance:
       profile: "{{ aws_profile | default('') }}"
       state: absent
       filters:
-        # "tag:business_domain_name": "{{ business_domain_name }}"
         "tag:user": "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
-        # "tag:short_desc": "{{ short_desc }}"
         "tag:demo": Ansible 
         instance-state-name: running 
       wait: yes
