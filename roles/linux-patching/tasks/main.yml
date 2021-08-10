@@ -25,6 +25,7 @@
     credentials: 
       - "Tower Credential"
       - "AWS"
+      - "AWS Linux"
     # survey_enabled: yes 
     # survey_spec: "{{ lookup('file', 'servicenow.json') }}"
     state: "present"
