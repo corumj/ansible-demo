@@ -13,7 +13,7 @@
       register: user
 
     - name: Spin up HA Proxy server 
-      awx.awx.tower_job_launch:
+      awx.awx.job_launch:
         job_template: 2. Provision
         extra_vars:
           survey_group_name: "loadbalancer"
@@ -21,14 +21,14 @@
           survey_server_env: "dev" 
           survey_server_os: "linux"
           survey_business_domain_name: "Red Hat"
-        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-        tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
-        tower_verify_ssl: true
+        controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+        validate_certs: true
       register: ha_proxy 
 
     - name: Spin up app1 server 
-      awx.awx.tower_job_launch:
+      awx.awx.job_launch:
         job_template: 2. Provision
         extra_vars:
           survey_group_name: "application"
@@ -36,14 +36,14 @@
           survey_server_env: "dev" 
           survey_server_os: "linux"
           survey_business_domain_name: "Red Hat"
-        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-        tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
-        tower_verify_ssl: true
+        controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+        validate_certs: true
       register: app1
 
     - name: spin up app2 server 
-      awx.awx.tower_job_launch:
+      awx.awx.job_launch:
         job_template: 2. Provision
         extra_vars:
           survey_group_name: "application"
@@ -51,24 +51,24 @@
           survey_server_env: "dev" 
           survey_server_os: "linux"
           survey_business_domain_name: "Red Hat"
-        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-        tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
-        tower_verify_ssl: true
+        controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+        validate_certs: true
       register: app2
 
     - name: Wait for HA Proxy server to provision
-      tower_job_wait:
+      awx.awx.job_wait:
         job_id: "{{ ha_proxy.id }}"
         timeout: 1600
 
     - name: Wait for app1 server to provision
-      tower_job_wait:
+      awx.awx.job_wait:
         job_id: "{{ app1.id }}"
         timeout: 1600
 
     - name: Wait for app2 server to provision
-      tower_job_wait:
+      awx.awx.job_wait:
         job_id: "{{ app2.id }}"
         timeout: 1600
 
