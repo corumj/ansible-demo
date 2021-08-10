@@ -71,30 +71,41 @@
         job_id: "{{ app2.id }}"
         timeout: 1600
 
-    - name: Add haproxy host 
-      add_host:
-        name: "{{ ha_proxy.instances[0].public_ip_address }}"
-        groups:
-          - haproxy 
-        ansible_ssh_private_key_file: ~/.ssh/id_rsa 
-        ansible_user: ec2-user
-        admin_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-        tower_ip: "{{ lookup('env', 'TOWER_HOST') }}"
-        aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+    - name: Meta refresh inventory
+      meta: refresh_inventory
 
-    - name: Add application hosts 
-      add_host:
-        name: "{{ item }}"
-        groups:
-          - app 
-        ansible_ssh_private_key_file: ~/.ssh/id_rsa 
-        ansible_user: ec2-user
-        admin_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-        tower_ip: "{{ lookup('env', 'TOWER_HOST') }}"
-        aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
-      loop:
-        - "{{ app1.instances[0].public_ip_address }}"
-        - "{{ app2.instances[0].public_ip_address }}"
+- name: Setup HA Proxy
+  hosts: tag_loadbalancer 
+
+  tasks:
+    - name: Test 
+      debug:
+        msg: Hello
+        
+    # - name: Add haproxy host 
+    #   add_host:
+    #     name: "{{ ha_proxy.instances[0].public_ip_address }}"
+    #     groups:
+    #       - haproxy 
+    #     ansible_ssh_private_key_file: ~/.ssh/id_rsa 
+    #     ansible_user: ec2-user
+    #     admin_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    #     tower_ip: "{{ lookup('env', 'TOWER_HOST') }}"
+    #     aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+
+    # - name: Add application hosts 
+    #   add_host:
+    #     name: "{{ item }}"
+    #     groups:
+    #       - app 
+    #     ansible_ssh_private_key_file: ~/.ssh/id_rsa 
+    #     ansible_user: ec2-user
+    #     admin_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    #     tower_ip: "{{ lookup('env', 'TOWER_HOST') }}"
+    #     aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+    #   loop:
+    #     - "{{ app1.instances[0].public_ip_address }}"
+    #     - "{{ app2.instances[0].public_ip_address }}"
 
     # - name: Setup HA Proxy 
     # - name: Install the app we want to safely shut down 
