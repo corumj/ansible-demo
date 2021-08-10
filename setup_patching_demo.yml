@@ -13,7 +13,7 @@
       register: user
 
     - name: Spin up HA Proxy server 
-      job_launch:
+      awx.awx.job_launch:
         job_template: 2. Provision
         extra_vars:
           survey_group_name: "loadbalancer"
@@ -28,7 +28,7 @@
       register: ha_proxy 
 
     - name: Spin up app1 server 
-      job_launch:
+      awx.awx.job_launch:
         job_template: 2. Provision
         extra_vars:
           survey_group_name: "application"
@@ -43,7 +43,7 @@
       register: app1
 
     - name: spin up app2 server 
-      job_launch:
+      awx.awx.job_launch:
         job_template: 2. Provision
         extra_vars:
           survey_group_name: "application"
