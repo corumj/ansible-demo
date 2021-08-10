@@ -11,7 +11,7 @@
         "min": null,
         "max": null,
         "default": "Windows",
-        "choices": "Windows\nLinux\nServiceNow\nLinux Patching"
+        "choices": "Windows\nLinux\nServiceNow"
     }
   ]
 }

@@ -3,10 +3,6 @@
   hosts: localhost 
   connection: local 
   tasks:
-    # - name: Find AWS User information
-    #   amazon.aws.aws_caller_info:
-    #     profile: "{{ aws_profile }}"
-    #   register: user
 
     - name: Setup Windows demo  
       include_role:
@@ -16,7 +12,7 @@
     - name: Setup Linux demo  
       include_role:
         name: linux-patching
-      when: demo_name == 'Linux Patching'
+      when: demo_name == 'Linux'
 
     - name: Setup ServiceNow demo  
       include_role:
