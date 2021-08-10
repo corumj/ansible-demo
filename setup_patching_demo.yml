@@ -80,6 +80,7 @@
         controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
         controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
         validate_certs: true
+        wait: yes
 
 - name: Setup HA Proxy
   hosts: tag_loadbalancer 
