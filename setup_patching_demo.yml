@@ -74,6 +74,10 @@
     - name: Meta refresh inventory
       meta: refresh_inventory
 
+    - name: Wait for inv refresh to complete
+      pause:
+        minutes: 1
+
 - name: Setup HA Proxy
   hosts: tag_loadbalancer 
 
@@ -81,7 +85,7 @@
     - name: Test 
       debug:
         msg: Hello
-        
+
     # - name: Add haproxy host 
     #   add_host:
     #     name: "{{ ha_proxy.instances[0].public_ip_address }}"
