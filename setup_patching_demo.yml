@@ -71,12 +71,15 @@
         job_id: "{{ app2.id }}"
         timeout: 1600
 
-    - name: Meta refresh inventory
-      meta: refresh_inventory
-
-    - name: Wait for inv refresh to complete
-      pause:
-        minutes: 1
+    - name: Update AWS Inventory Source
+      awx.awx.inventory_source_update:
+        name: AWS
+        inventory: AWS
+        organization: default
+        controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+        validate_certs: true
 
 - name: Setup HA Proxy
   hosts: tag_loadbalancer 
