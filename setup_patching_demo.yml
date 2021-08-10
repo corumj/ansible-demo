@@ -1,0 +1,102 @@
+--- 
+- name: Setup patching demo 
+  hosts: localhost
+  connection: local 
+
+  tasks:
+    - name: Find AWS User information
+      amazon.aws.aws_caller_info:
+        profile: "{{ aws_profile | default('') }}"
+        region: "{{ aws_region }}"
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: user
+
+    - name: Spin up HA Proxy server 
+      awx.awx.tower_job_launch:
+        job_template: 2. Provision
+        extra_vars:
+          survey_group_name: "loadbalancer"
+          survey_short_desc: "haproxy"
+          survey_server_env: "dev" 
+          survey_server_os: "linux"
+          survey_business_domain_name: "Red Hat"
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+        tower_verify_ssl: true
+      register: ha_proxy 
+
+    - name: Spin up app1 server 
+      awx.awx.tower_job_launch:
+        job_template: 2. Provision
+        extra_vars:
+          survey_group_name: "application"
+          survey_short_desc: "app1"
+          survey_server_env: "dev" 
+          survey_server_os: "linux"
+          survey_business_domain_name: "Red Hat"
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+        tower_verify_ssl: true
+      register: app1
+
+    - name: spin up app2 server 
+      awx.awx.tower_job_launch:
+        job_template: 2. Provision
+        extra_vars:
+          survey_group_name: "application"
+          survey_short_desc: "app2"
+          survey_server_env: "dev" 
+          survey_server_os: "linux"
+          survey_business_domain_name: "Red Hat"
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+        tower_verify_ssl: true
+      register: app2
+
+    - name: Wait for HA Proxy server to provision
+      tower_job_wait:
+        job_id: "{{ ha_proxy.id }}"
+        timeout: 1600
+
+    - name: Wait for app1 server to provision
+      tower_job_wait:
+        job_id: "{{ app1.id }}"
+        timeout: 1600
+
+    - name: Wait for app2 server to provision
+      tower_job_wait:
+        job_id: "{{ app2.id }}"
+        timeout: 1600
+
+    - name: Add haproxy host 
+      add_host:
+        name: "{{ ha_proxy.instances[0].public_ip_address }}"
+        groups:
+          - haproxy 
+        ansible_ssh_private_key_file: ~/.ssh/id_rsa 
+        ansible_user: ec2-user
+        admin_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_ip: "{{ lookup('env', 'TOWER_HOST') }}"
+        aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+
+    - name: Add application hosts 
+      add_host:
+        name: "{{ item }}"
+        groups:
+          - app 
+        ansible_ssh_private_key_file: ~/.ssh/id_rsa 
+        ansible_user: ec2-user
+        admin_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_ip: "{{ lookup('env', 'TOWER_HOST') }}"
+        aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+      loop:
+        - "{{ app1.instances[0].public_ip_address }}"
+        - "{{ app2.instances[0].public_ip_address }}"
+
+    # - name: Setup HA Proxy 
+    # - name: Install the app we want to safely shut down 
+    # - name: setup patching workflow 
