@@ -14,15 +14,11 @@
       when: demo_name == 'Windows'
 
     - name: Setup Linux demo  
-      debug:
-        msg: "Hello World, you chose to demo {{ demo_name }}"
-      when: demo_name == 'Linux'
+      include_role:
+        name: linux-patching
+      when: demo_name == 'Linux Patching'
 
     - name: Setup ServiceNow demo  
       include_role:
         name: servicenow
       when: demo_name == 'ServiceNow'
-
-    - name: Setup Linux Patching Demo 
-      include: setup_patching_demo.yml
-      when: demo_name == "Linux Patching"
