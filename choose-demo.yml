@@ -22,3 +22,7 @@
       include_role:
         name: servicenow
       when: demo_name == 'ServiceNow'
+
+    - name: Setup Linux Patching Demo 
+      include: setup_patching_demo.yml
+      when: demo_name == "Linux Patching"
