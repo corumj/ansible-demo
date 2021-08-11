@@ -9,8 +9,8 @@
       haproxy:
         state: disabled 
         host: "{{ inventory_hostname }}"
-        socket: /var/lib/haproxy/stats 
-        # backend: habackend 
+        socket: /var/lib/haproxy/stats.sock 
+        backend: habackend 
       delegate_to: "{{ item }}"
       with_items: "{{ groups.tag_loadbalancer }}"
 
