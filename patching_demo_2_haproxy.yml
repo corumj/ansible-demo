@@ -5,9 +5,9 @@
   vars: 
     haproxy_backend_servers:
       - name: app1
-        address: "{{ hostvars[groups['tag_application'][0]] }}"
+        address: "{{ hostvars[groups['tag_application'][0]]['private_ip2'] }}"
       - name: app2
-        address: "{{ hostvars[groups['tag_application'][1]] }}"
+        address: "{{ hostvars[groups['tag_application'][1]]['private_ip2'] }}"
 
   tasks:
     - name: print IP Address of app1 host
