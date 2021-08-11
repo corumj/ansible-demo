@@ -26,9 +26,9 @@
   become: yes 
   vars: 
     haproxy_backend_servers:
-      - name: app1
+      - name: "{{ hostvars[groups['tag_application'][1]]['private_ip_address'] }}"
         address: "{{ hostvars[groups['tag_application'][1]]['private_ip_address'] }}"
-      - name: app2
+      - name: "{{ hostvars[groups['tag_application'][1]]['private_ip_address'] }}"
         address: "{{ hostvars[groups['tag_application'][1]]['private_ip_address'] }}"
 
   roles:
