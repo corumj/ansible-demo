@@ -6,7 +6,7 @@
   tasks:
     - name: Disable the backend server in HAProxy
       haproxy:
-        state: disabled 
+        state: enabled 
         host: "{{ inventory_hostname }}"
         socket: /var/lib/haproxy/stats 
         backend: habackend 
