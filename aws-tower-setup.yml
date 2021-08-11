@@ -9,6 +9,7 @@
     server_env: "test" 
     server_os: "linux"
     business_domain_name: "Red Hat"
+    aws_instance_type: m3.medium
   vars_prompt:
     - name: prompt_admin_password
       prompt: Set your initial Tower admin password
