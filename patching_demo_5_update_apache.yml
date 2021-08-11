@@ -1,9 +1,9 @@
 ---
-- name: Patch everything
+- name: Update Apache Webserver
   hosts: tag_application 
   become: yes 
   tasks:
-    - name: Update all 
+    - name: Update Apache 
       package:
-        name: '*'
+        name: 'httpd'
         state: latest
