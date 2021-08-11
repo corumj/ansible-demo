@@ -10,6 +10,10 @@
         address: "{{ hostvars[groups['tag_application'][1]]['ec2_ip_address'] }}"
 
   tasks:
+    - name: Print group tag thing
+      debug:
+        var: groups['tag_application']
+        
     - name: print IP Address of app1 host
       debug:
         var: "{{ item }}"
