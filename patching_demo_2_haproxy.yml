@@ -1,4 +1,26 @@
 --- 
+- name: Apache webserver setup.
+  hosts: tag_application
+  become: yes
+
+  tasks:
+    - name: latest Apache version installed
+      package:
+        name: httpd
+        state: latest
+
+    - name: Apache enabled and running
+      service:
+        name: httpd
+        enabled: true
+        state: started
+
+    - name: Copy basic website to server 
+      copy:
+        src: shaded-relief.html
+        dest: /var/www/html/index.html
+
+
 - name: setup HA proxy
   hosts: tag_loadbalancer 
   become: yes 
@@ -9,15 +31,5 @@
       - name: app2
         address: "{{ hostvars[groups['tag_application'][1]]['private_ip_address'] }}"
 
-  tasks:
-    - name: Print group tag thing
-      debug:
-        var: haproxy_backend_servers
-
-    # - name: print IP Address of app1 host
-    #   debug:
-    #     var: "{{ item }}"
-    #   loop: "{{ haproxy_backend_servers }}"
-
-  # roles:
-  #   - geerlingguy.haproxy
+  roles:
+    - geerlingguy.haproxy
