@@ -5,9 +5,9 @@
   vars: 
     haproxy_backend_servers:
       - name: app1
-        address: "{{ hostvars[groups['tag_application'][0]]['private_ip2'] }}"
+        address: "{{ hostvars[groups['tag_application'][0]]['ansible_ip_addresses'] }}"
       - name: app2
-        address: "{{ hostvars[groups['tag_application'][1]]['private_ip2'] }}"
+        address: "{{ hostvars[groups['tag_application'][1]]['ec2_ip_address'] }}"
 
   tasks:
     - name: print IP Address of app1 host
