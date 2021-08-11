@@ -1,9 +1,9 @@
 ---
 - name: Patch everything
-  hosts: all 
+  hosts: tag_application 
   become: yes 
   tasks:
     - name: Update all 
-      yum:
+      package:
         name: '*'
         state: latest
