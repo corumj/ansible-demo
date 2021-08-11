@@ -1,13 +1,17 @@
 --- 
 - name: setup HA proxy
-  hosts: balancer 
+  hosts: tag_loadbalancer 
   become: yes 
   vars: 
     haproxy_backend_servers:
-      - name: 18.209.214.3
-        address: 18.209.214.3:80
-      - name: 3.238.219.190
-        address: 3.238.219.190:80
+      - name: app1
+        address: "{{ hostvars[groups['tag_application'][0]]['ansible_eth0']['ipv4']['address'] }}"
+      - name: app2
+        address: "{{ hostvars[groups['tag_application'][1]]['ansible_eth0']['ipv4']['address'] }}"
 
-  roles:
-    - geerlingguy.haproxy
+  tasks:
+    - name: print IP Address of app1 host
+      debug:
+        var: "{{ haproxy_backend_servers }}"
+  # roles:
+  #   - geerlingguy.haproxy

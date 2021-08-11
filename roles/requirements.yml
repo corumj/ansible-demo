@@ -1,2 +1,4 @@
 ---
 - geerlingguy.haproxy
+- geerlingguy.firewall
+- geerlingguy.apache
