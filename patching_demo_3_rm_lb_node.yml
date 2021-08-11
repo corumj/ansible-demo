@@ -1,0 +1,14 @@
+---
+- name: Remove backend node from load balancer 
+  hosts: tag_application
+  serial: 1 
+
+  tasks:
+    - name: Disable the backend server in HAProxy
+      haproxy:
+        state: disabled 
+        host: "{{ inventory_hostname }}"
+        socket: /var/lib/haproxy/stats 
+        backend: habackend 
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups.tag_loadbalancer }}"
