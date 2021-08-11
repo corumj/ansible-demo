@@ -16,7 +16,7 @@
 
 - name: Setup Patching Init playbook
   awx.awx.job_template:
-    name: "Linux - Initialize Patching Demo"
+    name: "Linux - Patching Demo 1. Provision Servers"
     job_type: "run"
     inventory: AWS
     project: Linux Tasks
@@ -29,6 +29,7 @@
     # survey_enabled: yes 
     # survey_spec: "{{ lookup('file', 'servicenow.json') }}"
     state: "present"
+    use_fact_cache: yes
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
