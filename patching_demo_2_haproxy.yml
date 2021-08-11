@@ -2,21 +2,22 @@
 - name: setup HA proxy
   hosts: tag_loadbalancer 
   become: yes 
-  vars: 
-    haproxy_backend_servers:
-      - name: app1
-        address: "{{ hostvars[groups['tag_application'][0]]['ec2_ip_address'] }}"
-      - name: app2
-        address: "{{ hostvars[groups['tag_application'][1]]['ec2_ip_address'] }}"
+  # vars: 
+  #   haproxy_backend_servers:
+  #     - name: app1
+  #       address: "{{ hostvars[groups['tag_application'][0]]['ec2_ip_address'] }}"
+  #     - name: app2
+  #       address: "{{ hostvars[groups['tag_application'][1]]['ec2_ip_address'] }}"
 
   tasks:
     - name: Print group tag thing
       debug:
-        var: groups['tag_application']
-        
-    - name: print IP Address of app1 host
-      debug:
-        var: "{{ item }}"
-      loop: "{{ haproxy_backend_servers }}"
+        var: hostvars[groups['tag_application'][1]
+
+    # - name: print IP Address of app1 host
+    #   debug:
+    #     var: "{{ item }}"
+    #   loop: "{{ haproxy_backend_servers }}"
+
   # roles:
   #   - geerlingguy.haproxy
