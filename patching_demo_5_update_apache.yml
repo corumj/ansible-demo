@@ -2,8 +2,10 @@
 - name: Update Apache Webserver
   hosts: tag_application 
   become: yes 
+  vars:
+    packages: "{{ survey_list_packages }}"
   tasks:
     - name: Update Apache 
       package:
-        name: 'httpd'
+        name: "{{ packages }}"
         state: latest
