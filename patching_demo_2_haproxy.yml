@@ -27,9 +27,9 @@
   vars: 
     haproxy_backend_servers:
       - name: "{{ hostvars[groups['tag_application'][1]]['private_ip_address'] }}"
-        address: "{{ hostvars[groups['tag_application'][1]]['private_ip_address']:80 }}"
+        address: "{{ hostvars[groups['tag_application'][1]]['private_ip_address'] }}:80"
       - name: "{{ hostvars[groups['tag_application'][1]]['private_ip_address'] }}"
-        address: "{{ hostvars[groups['tag_application'][1]]['private_ip_address']:80 }}"
+        address: "{{ hostvars[groups['tag_application'][1]]['private_ip_address'] }}:80"
 
   roles:
     - geerlingguy.haproxy
