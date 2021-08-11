@@ -12,7 +12,7 @@
   tasks:
     - name: Print group tag thing
       debug:
-        var: hostvars[groups['tag_application'][1]
+        var: hostvars[groups['tag_application'][1]]
 
     # - name: print IP Address of app1 host
     #   debug:
