@@ -1,0 +1,48 @@
+---
+- name: Patch one server at a time 
+  hosts: tag_application 
+  become: yes
+  serial: 1 
+
+  tasks:
+    - name: Disable the backend server in HAProxy
+      haproxy:
+        state: disabled 
+        host: "{{ inventory_hostname }}"
+        socket: /var/lib/haproxy/stats 
+        backend: habackend 
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups.tag_loadbalancer }}"
+
+    - debug:
+        msg: "{{ inventory_hostname }} has been removed from the Load Balancer Pool"
+
+    - name: Shut down Apache services 
+      service:
+        name: httpd
+        state: stopped 
+
+    - name: Update httpd 
+      package:
+        name: httpd
+        state: latest 
+
+    - name: Start Apache services 
+      service:
+        name: httpd
+        state: started 
+
+    - name: Check that site is up with 200 response 
+      uri:
+        url: http://localhost
+
+    - name: Enable the backend server in HAProxy
+      haproxy:
+        state: enabled 
+        host: "{{ inventory_hostname }}"
+        socket: /var/lib/haproxy/stats 
+        backend: habackend 
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups.tag_loadbalancer }}"
+
+    
