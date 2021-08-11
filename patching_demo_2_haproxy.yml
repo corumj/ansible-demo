@@ -5,13 +5,14 @@
   vars: 
     haproxy_backend_servers:
       - name: app1
-        address: "{{ hostvars[groups['tag_application'][0]] }}"
+        address: "{{ hostvars[groups['tag_application']] }}"
       - name: app2
-        address: "{{ hostvars[groups['tag_application'][1]] }}"
+        address: "{{ hostvars[groups['tag_application']] }}"
 
   tasks:
     - name: print IP Address of app1 host
       debug:
-        var: "{{ haproxy_backend_servers }}"
+        var: "{{ item }}"
+      loop: "{{ haproxy_backend_servers }}"
   # roles:
   #   - geerlingguy.haproxy
