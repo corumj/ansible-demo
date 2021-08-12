@@ -9,6 +9,7 @@
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
     validate_certs: true
+    update_project: yes
     scm_type: git 
     scm_branch: platform
     scm_url: https://github.com/corumj/ansible-linux-tasks
@@ -20,6 +21,7 @@
     state: present
     wait: yes
     organization: Default 
+    update_project: yes
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
