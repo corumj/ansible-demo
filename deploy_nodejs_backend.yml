@@ -1,0 +1,42 @@
+- name: Deploy demo Node JS backend
+  hosts: tag_demo_backend 
+  gather_facts: no 
+  vars:
+    git_repo_url: https://github.com/corumj/node-js-postgresql-crud-example
+    repo_path: /home/ec2-user/demoapp 
+    repo_branch: main
+
+  tasks:
+    - name: Clone the app repository 
+      git: 
+        repo: "{{ git_repo_url }}"
+        dest: "{{ repo_path }}"
+        version: "{{ repo_branch }}"
+
+    - name: Install packages based on package.json
+      npm:
+        path: "{{ repo_path }}"
+        state: present
+
+    - name: copy demoapp.service to server
+      copy:
+        src: demoapp.service
+        dest: /etc/systemd/system/demoapp.service
+
+    - name: enable and start demoapp service
+      systemd:
+        name: demoapp
+        daemon_reload: yes 
+        enabled: yes 
+        state: started
+
+    - name: enable and start service
+      systemd:
+        name: dcmetromap
+        daemon_reload: yes
+        enabled: yes
+        state: started
+
+    - name: Provide URL to test backend
+      debug:
+        msg: "http://{{ ansible_host }}/"
