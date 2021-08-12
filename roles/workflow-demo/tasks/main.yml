@@ -26,7 +26,6 @@
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
     validate_certs: true
-    scm_branch: platform
     scm_type: git 
     scm_url: https://github.com/corumj/ansible-windows-admin-tasks
     scm_update_on_launch: yes 
