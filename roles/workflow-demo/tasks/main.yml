@@ -1,0 +1,214 @@
+---
+- name: Setup Linux Tasks project
+  awx.awx.project:
+    name: Linux Tasks 
+    state: present
+    wait: yes
+    organization: Default 
+    controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    controller_verify_ssl: true
+    scm_type: git 
+    scm_branch: platform
+    scm_url: https://github.com/corumj/ansible-linux-tasks
+    scm_update_on_launch: yes 
+
+- name: Setup Windows Tasks project
+  awx.awx.project:
+    name: Windows Tasks 
+    state: present
+    wait: yes
+    organization: Default 
+    controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    controller_verify_ssl: true
+    scm_type: git 
+    scm_branch: platform
+    scm_url: https://github.com/corumj/ansible-windows-admin-tasks
+    scm_update_on_launch: yes 
+
+- name: Setup Linux - RHEL System Role NTP Config template
+  awx.awx.job_template:
+    name: "Linux - RHEL System Role NTP Config"
+    job_type: "run"
+    inventory: AWS
+    project: Linux Tasks
+    playbook: "timesync.yml"
+    organization: Default 
+    credentials: 
+      - "AWS Linux"
+    state: "present"
+    controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    controller_verify_ssl: true
+
+- name: Setup Linux - RHEL System Role Crypto Policy template
+  awx.awx.job_template:
+    name: "Linux - RHEL System Role Crypto Policy"
+    job_type: "run"
+    inventory: AWS
+    project: Linux Tasks
+    playbook: "crypto.yml"
+    organization: Default 
+    credentials: 
+      - "AWS Linux"
+    state: "present"
+    controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    controller_verify_ssl: true
+
+- name: Setup Linux - PostgreSQL Template 
+  awx.awx.job_template:
+    name: "Linux - Install and setup PostgreSQL"
+    job_type: "run"
+    inventory: AWS
+    project: Linux Tasks
+    playbook: "setup_postgres.yml"
+    organization: Default 
+    credentials: 
+      - "AWS Linux"
+    state: "present"
+    controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    controller_verify_ssl: true
+
+- name: Setup Linux - Install nodeJS template
+  awx.awx.job_template:
+    name: "Linux - Install and setup NodeJS"
+    job_type: "run"
+    inventory: AWS
+    project: Linux Tasks
+    playbook: "install_nodejs.yml"
+    organization: Default 
+    credentials: 
+      - "AWS Linux"
+    state: "present"
+    controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    controller_verify_ssl: true
+
+- name: Setup Linux - Deploy nodeJS backend template
+  awx.awx.job_template:
+    name: "Linux - Deploy NodeJS Backend"
+    job_type: "run"
+    inventory: AWS
+    project: Linux Tasks
+    playbook: "deploy_nodejs_backend.yml"
+    organization: Default 
+    credentials: 
+      - "AWS Linux"
+    state: "present"
+    controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    controller_verify_ssl: true
+
+- name: Setup Windows - Configure DNS template 
+  awx.awx.job_template:
+    name: "Windows - Configure DNS"
+    job_type: "run"
+    inventory: AWS
+    project: Linux Tasks
+    playbook: "dns_client.yml"
+    organization: Default 
+    credentials: 
+      - "AWS Windows"
+    state: "present"
+    controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    controller_verify_ssl: true
+
+- name: Setup Windows - Configure IIS template 
+  awx.awx.job_template:
+    name: "Windows - Configure DNS"
+    job_type: "run"
+    inventory: AWS
+    project: Linux Tasks
+    playbook: "iis_basic.yml"
+    organization: Default 
+    credentials: 
+      - "AWS Windows"
+    state: "present"
+    controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    controller_verify_ssl: true
+
+- name: Setup Windows - Deploy Front end to IIS template 
+  awx.awx.job_template:
+    name: "Windows - Deploy Demo Front End"
+    job_type: "run"
+    inventory: AWS
+    project: Linux Tasks
+    playbook: "deploy_demo_font_end.yml"
+    organization: Default 
+    credentials: 
+      - "AWS Windows"
+    state: "present"
+    controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    controller_verify_ssl: true
+
+# - name: Setup workflow template to deploy the stack
+#   awx.awx.workflow_job_template:
+#     name: Demo - Deploy application stack
+#     inventory: AWX
+#     extra_vars: {}
+#     schema:
+#       - identifier: node101
+#         unified_job_template:
+#           name: example-project
+#           inventory:
+#             organization:
+#               name: Default
+#           type: inventory_source
+#         related:
+#           success_nodes: []
+#           failure_nodes:
+#             - identifier: node201
+#           always_nodes: []
+#           credentials: []
+#       - identifier: node201
+#         unified_job_template:
+#           organization:
+#             name: Default
+#           name: job template 1
+#           type: job_template
+#         credentials: []
+#         related:
+#           success_nodes:
+#             - identifier: node301
+#           failure_nodes: []
+#           always_nodes: []
+#           credentials: []
+#       - identifier: node202
+#         unified_job_template:
+#           organization:
+#             name: Default
+#           name: example-project
+#           type: project
+#         related:
+#           success_nodes: []
+#           failure_nodes: []
+#           always_nodes: []
+#           credentials: []
+#       - identifier: node301
+#         all_parents_must_converge: false
+#         unified_job_template:
+#           organization:
+#             name: Default
+#           name: job template 2
+#           type: job_template
+#         related:
+#           success_nodes: []
+#           failure_nodes: []
+#           always_nodes: []
+#           credentials: []
