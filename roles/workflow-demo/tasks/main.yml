@@ -115,7 +115,7 @@
     name: "Windows - Configure DNS"
     job_type: "run"
     inventory: AWS
-    project: Linux Tasks
+    project: Windows Tasks
     playbook: "dns_client.yml"
     organization: Default 
     credentials: 
@@ -131,7 +131,7 @@
     name: "Windows - Configure DNS"
     job_type: "run"
     inventory: AWS
-    project: Linux Tasks
+    project: Windows Tasks
     playbook: "iis_basic.yml"
     organization: Default 
     credentials: 
@@ -147,7 +147,7 @@
     name: "Windows - Deploy Demo Front End"
     job_type: "run"
     inventory: AWS
-    project: Linux Tasks
+    project: Windows Tasks
     playbook: "deploy_demo_font_end.yml"
     organization: Default 
     credentials: 
