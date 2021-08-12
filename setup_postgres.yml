@@ -1,0 +1,12 @@
+- name: Setup PostgreSQL 
+  hosts: tag_postgres
+  vars:
+    postgresql_databases:
+      - name: example_db
+    postgresql_users:
+      - name: example_user
+        password: "{{ ansible_password }}"
+  become: yes
+  
+  roles:
+    - geerlingguy.postgresql
