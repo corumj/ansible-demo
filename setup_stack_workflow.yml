@@ -1,0 +1,7 @@
+---
+- name: Demo - Setup stack application 
+  hosts: localhost
+  connection: local 
+  
+  role:
+    - workflow-demo
