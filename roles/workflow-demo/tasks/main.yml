@@ -8,7 +8,7 @@
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    controller_verify_ssl: true
+    validate_certs: true
     scm_type: git 
     scm_branch: platform
     scm_url: https://github.com/corumj/ansible-linux-tasks
@@ -23,7 +23,7 @@
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    controller_verify_ssl: true
+    validate_certs: true
     scm_type: git 
     scm_branch: platform
     scm_url: https://github.com/corumj/ansible-windows-admin-tasks
@@ -43,7 +43,7 @@
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    controller_verify_ssl: true
+    validate_certs: true
 
 - name: Setup Linux - RHEL System Role Crypto Policy template
   awx.awx.job_template:
@@ -59,7 +59,7 @@
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    controller_verify_ssl: true
+    validate_certs: true
 
 - name: Setup Linux - PostgreSQL Template 
   awx.awx.job_template:
@@ -75,7 +75,7 @@
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    controller_verify_ssl: true
+    validate_certs: true
 
 - name: Setup Linux - Install nodeJS template
   awx.awx.job_template:
@@ -91,7 +91,7 @@
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    controller_verify_ssl: true
+    validate_certs: true
 
 - name: Setup Linux - Deploy nodeJS backend template
   awx.awx.job_template:
@@ -107,7 +107,7 @@
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    controller_verify_ssl: true
+    validate_certs: true
 
 - name: Setup Windows - Configure DNS template 
   awx.awx.job_template:
@@ -123,7 +123,7 @@
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    controller_verify_ssl: true
+    validate_certs: true
 
 - name: Setup Windows - Configure IIS template 
   awx.awx.job_template:
@@ -139,7 +139,7 @@
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    controller_verify_ssl: true
+    validate_certs: true
 
 - name: Setup Windows - Deploy Front end to IIS template 
   awx.awx.job_template:
@@ -155,7 +155,7 @@
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    controller_verify_ssl: true
+    validate_certs: true
 
 # - name: Setup workflow template to deploy the stack
 #   awx.awx.workflow_job_template:
