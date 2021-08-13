@@ -148,7 +148,7 @@
     job_type: "run"
     inventory: AWS
     project: Windows Tasks
-    playbook: "deploy_demo_font_end.yml"
+    playbook: "deploy_demo_front_end.yml"
     organization: Default 
     credentials: 
       - "AWS Windows"
