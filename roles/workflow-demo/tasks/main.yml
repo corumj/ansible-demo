@@ -42,6 +42,7 @@
       - "AWS Linux"
     state: "present"
     ask_limit_on_launch: yes
+    use_fact_cache: yes
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
@@ -59,6 +60,7 @@
       - "AWS Linux"
     state: "present"
     ask_limit_on_launch: yes
+    use_fact_cache: yes
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
@@ -76,6 +78,7 @@
       - "AWS Linux"
     state: "present"
     ask_limit_on_launch: yes
+    use_fact_cache: yes
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
@@ -93,6 +96,7 @@
       - "AWS Linux"
     state: "present"
     ask_limit_on_launch: yes
+    use_fact_cache: yes
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
@@ -110,6 +114,7 @@
       - "AWS Linux"
     state: "present"
     ask_limit_on_launch: yes
+    use_fact_cache: yes
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
@@ -127,6 +132,7 @@
       - "AWS Windows"
     state: "present"
     ask_limit_on_launch: yes
+    use_fact_cache: yes
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
@@ -144,6 +150,7 @@
       - "AWS Windows"
     state: "present"
     ask_limit_on_launch: yes
+    use_fact_cache: yes
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
@@ -161,6 +168,7 @@
       - "AWS Windows"
     state: "present"
     ask_limit_on_launch: yes
+    use_fact_cache: yes
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
