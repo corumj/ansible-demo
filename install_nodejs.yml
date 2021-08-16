@@ -7,4 +7,4 @@
     nodejs_install_npm_user: ec2-user
 
   roles:
-    - geerlingguy.nodejs
+    - geerlingguy.nodejs 
