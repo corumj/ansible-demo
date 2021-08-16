@@ -6,5 +6,5 @@
       - jslint 
     nodejs_install_npm_user: ec2-user
 
-  role:
+  roles:
     - geerlingguy.nodejs
