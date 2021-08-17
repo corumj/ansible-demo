@@ -35,6 +35,10 @@
           - 443 # HTTPS
           - 22 # SSH
         cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        ports: 
+          - 5432
+        cidr_ip: 10.0.0.0/16
       - proto: icmp
         to_port: -1
         from_port: -1
