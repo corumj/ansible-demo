@@ -35,10 +35,6 @@
           - 443 # HTTPS
           - 22 # SSH
         cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        ports: 
-          - 5432
-        cidr_ip: 10.0.0.0/16
       - proto: icmp
         to_port: -1
         from_port: -1
@@ -55,6 +51,7 @@
           - 389 # LDAP 
           - 445 # SMB
           - 464 # Kerberos Authentication
+          - 5432 # PostgreSQL
           - 636 # LDAPS (LDAP over TLS)
           - 873 # Rsync 
           - 3268-3269 # Global Catalog 
