@@ -8,7 +8,7 @@
   register: user
 
 - name: Get list of instances for user as part of this demo 
-  community.aws.ec2_instance_info:
+  amazon.aws.ec2_instance_info:
     profile: "{{ aws_profile | default('') }}"
     region: "{{ aws_region }}"
     aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
