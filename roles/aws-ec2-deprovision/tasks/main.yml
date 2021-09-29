@@ -1,6 +1,6 @@
 --- 
 - name: Deprovision ec2 instance 
-  community.aws.ec2_instance:
+  amazon.aws.ec2_instance:
     profile: "{{ aws_profile | default('') }}"
     state: absent
     filters:

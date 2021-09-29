@@ -2,7 +2,7 @@
 - name: Setup EC2 Windows instance 
   block:
     - name: Provision EC2 Windows Instance 
-      community.aws.ec2_instance:
+      amazon.aws.ec2_instance:
         profile: "{{ aws_profile | default('') }}"
         state: present
         name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}-{{ aws_user }}"
@@ -27,7 +27,7 @@
   when: server_os == 'windows'
 
 - name: Provision EC2 Linux Instance 
-  community.aws.ec2_instance:
+  amazon.aws.ec2_instance:
     profile: "{{ aws_profile | default('') }}"
     state: present
     name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}-{{ aws_user }}"
