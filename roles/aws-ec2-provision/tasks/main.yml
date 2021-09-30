@@ -4,7 +4,7 @@
     - name: Provision EC2 Windows Instance 
       amazon.aws.ec2_instance:
         profile: "{{ aws_profile | default('') }}"
-        state: present
+        state: started
         name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}-{{ aws_user }}"
         security_group: "{{ sec_info.security_groups[0].group_name }}"
         vpc_subnet_id: "{{ vpc_subnet_info.subnets[0].subnet_id }}"
@@ -29,7 +29,7 @@
 - name: Provision EC2 Linux Instance 
   amazon.aws.ec2_instance:
     profile: "{{ aws_profile | default('') }}"
-    state: present
+    state: started
     name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}-{{ aws_user }}"
     security_group: "{{ sec_info.security_groups[0].group_name }}"
     vpc_subnet_id: "{{ vpc_subnet_info.subnets[0].subnet_id }}"
