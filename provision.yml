@@ -32,7 +32,7 @@
 
     - name: Update deprovision list 
       include_role:
-        name: tower-setup 
+        name: controller-setup 
         tasks_from: deprovision-survey-list.yml
 
     - name: Update AWS Inventory 
