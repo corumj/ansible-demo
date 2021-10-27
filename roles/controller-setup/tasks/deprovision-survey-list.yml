@@ -1,12 +1,4 @@
 ---
-- name: Find AWS User information
-  amazon.aws.aws_caller_info:
-    profile: "{{ aws_profile | default('') }}"
-    region: "{{ aws_region }}"
-    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-  register: user
-
 - name: Get list of instances for user as part of this demo 
   amazon.aws.ec2_instance_info:
     profile: "{{ aws_profile | default('') }}"
@@ -17,7 +9,6 @@
       instance-state-name: running 
       # tag:business_domain_name: Red Hat 
       tag:demo: Ansible 
-      tag:user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
   register: ec2 
 
 - name: Update  Deprovision Template
