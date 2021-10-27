@@ -7,3 +7,4 @@ collections:
   - awx.awx
   - containers.podman
   # - ansible.tower
+  - community.general
