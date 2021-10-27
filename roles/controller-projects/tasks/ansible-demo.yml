@@ -1,0 +1,14 @@
+---
+- name: Create Ansible Demo Project
+  awx.awx.project:
+    name: Ansible Demo 
+    state: present
+    wait: yes
+    organization: Default 
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    validate_certs: true
+    scm_type: git 
+    scm_url: https://github.com/corumj/ansible-demo.git
+    scm_update_on_launch: yes 

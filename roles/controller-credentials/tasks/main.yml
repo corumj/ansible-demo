@@ -1,0 +1,64 @@
+---
+- name: Setup Tower Credential 
+  awx.awx.credential:
+    state: present
+    name: Tower Credential
+    description: Tower Credential to automate Tower itself 
+    organization: Default 
+    credential_type: "Red Hat Ansible Automation Platform"
+    inputs:
+      username: "admin"
+      password: "{{ admin_password }}"
+      host: "https://ansible.{{ top_level_domain }}"
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    validate_certs: true
+
+- name: Create AWS Windows Machine credential 
+  awx.awx.credential:
+    state: present 
+    name: AWS Windows 
+    description: AWS Windows Machine Credential 
+    organization: Default 
+    credential_type: Machine 
+    inputs:
+      username: administrator
+      password: "{{ admin_password }}"
+      become_method: runas 
+      become_username: Administrator 
+      become_password: "{{ admin_password }}"
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    validate_certs: true
+
+- name: Create AWS Linux Machine credential 
+  awx.awx.credential:
+    state: present 
+    name: AWS Linux 
+    description: AWS Linux Machine Credential 
+    organization: Default 
+    credential_type: Machine 
+    inputs:
+      username: ec2-user
+      ssh_key_data: "{{ private_key }}"
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    validate_certs: true
+
+- name: Create AWS Credential 
+  awx.awx.credential:
+    state: present
+    name: AWS
+    description: AWS Credential from saml 
+    organization: Default 
+    credential_type: Amazon Web Services
+    inputs:
+      username: "{{ lookup('ini', 'aws_access_key_id section=default file=~/.aws/credentials') }}"
+      password: "{{ lookup('ini', 'aws_secret_access_key section=default file=~/.aws/credentials') }}"
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    validate_certs: true

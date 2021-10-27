@@ -1,0 +1,209 @@
+---
+- name: Download installer 
+  include_role: 
+    name: aap_download
+
+- name: Create tmp directory to store AAP tar.gz
+  tempfile:
+    state: directory
+    suffix: "aapbundle"
+  register: tempdir
+
+- name: copy AAP tar.gz
+  copy:
+    src: "{{ aap_archive | default(playbook_dir + '/aap.tar.gz') }}"
+    dest: "{{ tempdir.path }}/aap.tar.gz"
+
+- name: Create directory for automation controller
+  file:
+    path: "{{ aap_dir }}"
+    state: directory
+
+- name: Extract AAP tar.gz install
+  unarchive:
+    src: "{{ tempdir.path }}/aap.tar.gz"
+    dest: "{{ aap_dir }}"
+    remote_src: true
+    extra_opts: ['--strip-components=1', '--show-stored-names']
+
+- name: template inventory file for Ansible Controller Install
+  template:
+    src: "controller_install.j2"
+    dest: "{{ aap_dir }}/inventory"
+
+- name: run the Automation Controller installer
+  shell: "./setup.sh -e gpgcheck=0"
+  args:
+    chdir: "{{ aap_dir }}"
+  async: 1400
+  poll: 15
+
+- name: wait for Automation Controller to be up
+  uri:
+    url: https://localhost/api/v2/ping/
+    method: GET
+    user: admin
+    password: "{{admin_password}}"
+    validate_certs: false
+  register: check2
+  # wait <= 10 minutes for a satisfactory result, which is
+  #   - something is returned
+  #   - instance_groups[*].capacity > 0
+  #   - instances[*].capacity > 0
+  # if capacity is 0, execution later fails with a seemingly unrelated urllib TLS version error
+  # we only check instance{s,groups}[0] because we're not clustering
+  until: check2.json is defined and check2.json.instances[0].capacity > 0 and check2.json.instance_groups[0].capacity > 0
+  retries: 60
+  delay: 10
+
+- name: Install ansible.cfg in home directory
+  template:
+    src: ansible.cfg.j2
+    dest: "/etc/ansible/ansible.cfg"
+
+
+- name: Display /api/v2/ping results
+  debug:
+    msg: '{{ check2.json }}'
+
+- name: install ansible-tower-cli and requests
+  become: true
+  pip:
+    name:
+      - ansible-tower-cli
+      - "requests==2.6.0"
+    state: latest
+
+- name: load license block
+  block:
+    - name: check for base64 variable first
+      copy:
+        dest: '{{ playbook_dir }}/manifest.zip'
+        content: '{{ base64_manifest | b64decode }}'
+      delegate_to: localhost
+      become: false
+  rescue:
+    - name: unable to load base64_manifest
+      debug:
+        msg: 'No base64_manifest variable found, trying to open manifest.zip'
+  always:
+    - name: Load manifest into variable
+      local_action:
+        module: slurp
+        src: "{{ playbook_dir }}/manifest.zip"
+      register: manifest_file
+      become: false
+
+- name: Post manifest file
+  uri:
+    url: https://{{ ansible_host }}/api/v2/config/
+    method: POST
+    user: admin
+    password: "{{admin_password}}"
+    body: '{ "eula_accepted": true, "manifest": "{{ manifest_file.content }}" }'
+    body_format: json
+    validate_certs: false
+    force_basic_auth: true
+
+## Execution environments
+
+- name: Login to redhat registry
+  containers.podman.podman_login:
+    username: '{{ redhat_username }}'
+    password: '{{ redhat_password }}'
+    registry: registry.redhat.io
+  become_user: "awx"
+
+- name: Mod containers.conf to utilize max of 10 parallel threads
+  become_user: "awx"
+  lineinfile:
+    path: /var/lib/awx/.config/containers/containers.conf
+    line: 'image_parallel_copies=10'
+    insertafter: EOF
+
+- name: Pull supported images
+  become_user: "awx"
+  containers.podman.podman_image:
+    name: "{{ item }}"
+  loop:
+    - "registry.redhat.io/ansible-automation-platform-20-early-access/ee-supported-rhel8:2.0.0"
+    - "registry.redhat.io/ansible-automation-platform-20-early-access/ee-29-rhel8:2.0.0"
+    - "registry.redhat.io/ansible-automation-platform-20-early-access/ee-minimal-rhel8:2.0.0"
+  register: podman_pull_supported
+  until: podman_pull_supported is not failed
+  retries: 5
+  delay: 15
+
+- name: create container registry credential
+  awx.awx.credential:
+    name: registry.redhat.io credential
+    organization: Default
+    credential_type: Container Registry
+    controller_host: "https://{{ ansible_host }}"
+    controller_username: admin
+    controller_password: "{{ admin_password }}"
+    validate_certs: false
+    inputs:
+      username: "{{ redhat_username }}"
+      password: "{{ redhat_password }}"
+      host: "registry.redhat.io"
+
+- name: update default EE to use credential
+  awx.awx.execution_environment:
+    name: "Default execution environment"
+    image: "registry.redhat.io/ansible-automation-platform-20-early-access/ee-supported-rhel8:2.0.0"
+    pull: missing
+    credential: "registry.redhat.io credential"
+    controller_username: admin
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://{{ ansible_host }}"
+    validate_certs: false
+  register: ee_check
+  until: ee_check is not failed
+  retries: 4
+  delay: 5
+
+- name: Setup Route 53 for domain name 
+  community.aws.route53:
+    profile: "{{ aws_profile }}"
+    state: present 
+    zone: "{{ top_level_domain }}"
+    record: "ansible.{{ top_level_domain }}"
+    type: A
+    value: "{{ tower_ip }}"
+    ttl: 300
+    wait: yes
+    overwrite: yes
+  become: no
+  delegate_to: localhost
+
+- name: Configure Nginx with FQDN 
+  template:
+    src: nginx.conf.j2 
+    dest: /etc/nginx/nginx.conf 
+    validate: /usr/sbin/nginx -t -c %s 
+  register: nginx 
+
+- name: Restart nginx 
+  service:
+    name: nginx 
+    state: restarted 
+  when: nginx.changed 
+
+- name: Install EPEL
+  dnf:
+    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm"
+    state: present
+    disable_gpg_check: true
+
+- name: Install certbot and requirements 
+  package:
+    name:
+      - certbot 
+      - python3-certbot-nginx 
+    state: present 
+
+- name: Use certbot to setup certificate 
+  shell: "certbot --nginx -d ansible.{{ top_level_domain }} --non-interactive --agree-tos -m {{ redhat_email }}"
+  args:
+    creates: /etc/letsencrypt/live/ansible.{{ top_level_domain }}/fullchain.pem

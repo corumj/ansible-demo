@@ -1,9 +1,5 @@
-> Due to some changes to the awx.awx module, you will need to update your
-> local copy of the collection as of 6/24/2021:
-> `ansible-galaxy collection install awx.awx --force`
-
-# Ansible Demo Environment
-This is to help provide a quick, single stop shop for Ansible demo's.  Please don't use any of these playbooks in production without lots of review - they were not meant to be to a production spec.  
+# Ansible Demo Environment for Red Hat Open Environments 
+This is to help provide a quick, single stop shop for Ansible demo's using the new Red Hat Open Environments.  Please don't use any of these playbooks in production without lots of review.  
 
 This demo environment incorporates a variety of playbooks from other Git projects and is meant to be somewhat modular so it can grow with time.  
 
@@ -14,40 +10,42 @@ This demo environment incorporates a variety of playbooks from other Git project
     * Compliance (basic because we don't have all day in a demo to wait for a CIS standard to scan)
   * Linux (coming soon, hopefully)
     * Config Management 
-      * Nginx Install
-      * Templating Nginx Config file
-      * Patching 
-      * Templating SUDOERS file
-  * Windows (coming soon hopefully)
+  * Windows 
     * Config Management 
       * Windows Features on and off
       * Compliance checking 
       * Multi-site IIS config 
       * Installing packages with Chocolatey
-    * Active Directory Setup
-    * using win_dsc to take advantage of PowerShell DSC's 
-      (https://github.com/corumj/ansible-windows-demo/blob/76c1e82da04e62504af159ce3e031b7c5d615803/roles/windows-ad-controller/tasks/main.yml#L160-L178)  
-    * Configuring LDAP and pulling AD groups into Tower to manage users (coming soon)
   * Generic talking points
     * Using collections and roles
     * AWS Dynamic Inventory & Provisioning
   
 
 # Requirements:
-  * AWS Account access with a boto profile (specify your profile name in `group_vars/all.yml`, default is `saml`)
-  * Update your ~/.aws/credentials file to use the correct region. It should be us-east-1 unless you are updating the AMI's for linux and windows as well.  It defaults to us-west-2 for some reason but once you change it, the aws-saml.py script we use at RH won't touch it again.  If you forget this, you might get a weird error that makes no sense about a missing 0 element array because... why not
-  * SSH keys at ~/.ssh (you can update the `group_vars/all.yml` file with the path of the key you want to use, by default it's just ~/.ssh/id_rsa)
-  * Manifest file for registering Tower, needs to be downloaded and placed in this repo's files folder `files/manifest.zip`  See obtaining a subscription manifest for Tower [here](https://docs.ansible.com/ansible-tower/latest/html/userguide/import_license.html#obtaining-a-subscriptions-manifest)
+  * Red Hat Open Environments "AWS Blank Open Environment" provisioning email with AWS keys and top level domain.
+  * SSH keys at ~/.ssh (you can update the `group_vars/all.yml` file with the path of the key you want to use, by default it's just `~/.ssh/id_rsa`)
+  * Manifest file for registering Controller, needs to be downloaded and placed in this repo's root folder as `manifest.zip`  See obtaining a subscription manifest for Tower [here](https://docs.ansible.com/ansible-tower/latest/html/userguide/import_license.html#obtaining-a-subscriptions-manifest)
   * Python modules on your local machine running Ansible Core:
     * boto/boto3 
-  * Ansible-core 2.9.x 
+  * Ansible-core 2.11.x
+  * An access.redhat.com offline token 
+    - Create a Red Hat API token at https://access.redhat.com/management/api 
+  * An Automation Hub offline token
+    - Create a token for Automation Hub at https://console.redhat.com/ansible/automation-hub/token
     
 # Setup
-1. Make sure your boto profile is refreshed and you have updated *aws_profile* in `group_vars/all.yml` to match your profile name in `~/.aws/credentials`.  The default value uses the saml profile, which is what our Red Hat IT folks have established as the standard.  You shouldn't need to make any changes if you are using their awesome aws-saml.py script (though I do recommend running it with `--session-duration 14400`, so you get 4 hours out of a token and not just 1 hour).  Also verify that *aws_region* in the group vars file matches whats in your saml profile - this will matter later on when provisioning servers for the demo.  It can be edited in both places without causing errors, but bear in mind if you use a region other than us-east-1 you are responsible for finding the correct AMI's for RHEL and Windows Server.  
-2. Run `./setup.sh`.  It will install the required collections for setup and ask you to confirm an initial Ansible Tower administrator password, and then spin up your Tower Environment.  Expect this to take around 15-30 minutes. 
+1. Update your boto profile in `~/.aws/credentials`.  Detailed instructions can be found here, https://github.com/ansible/workshops/blob/devel/docs/setup.md but it should look approximately like this:
+```ini
+[default]
+aws_access_key_id = ABCDEFGHIJKLMNOP
+aws_secret_access_key = ABCDEFGHIJKLMNOP/ABCDEFGHIJKLMNOP
+```
+
+2. Copy `extra_vars_template.yml` to `extra_vars.yml` and populate the variables.  This will have secret information so `extra_vars.yml` is in the `.gitignore` file - you shouldn't have to revisit that file unless you usernames or tokens change.  
+
+3. Run `./setup.sh`.  For whatever reason it currently doesn't work without a Become password - this needs to be your localhost password, it will install the collections needed and proceed to provision and install AAP2 at `https://ansible.{{ top_level_domain }}` where `top_level_domain` comes from the Open Environments email and is populated in `extra_vars.yml`.
 
 # Utilities to make your life easier
-1. `./start.sh` and `./stop.sh` will start and stop the Tower server, and ONLY the Tower server in AWS.
-2. `./refresh_credential.sh` can be run after refreshing your saml AWS profile to update the AWS credential in Tower
-3. `ansible-playbook aws-tower-teardown.yml` can be run if you are done using Tower and won't be returning to it.  Bear in mind that the setup cannot be run ad naseum because Let's Encrypt will tell you to pound sand if you request the same certificate more than 5 times a month, so completely deprovisioning should be rare, keep the server off when you are not using it.  
+1. `./start.sh` and `./stop.sh` will start and stop the Controller server, and ONLY the Controller server in AWS.
+3. `ansible-playbook aws-tower-teardown.yml` can be run if you are done using Controller and won't be returning to it.  Bear in mind that the setup cannot be run ad naseum because Let's Encrypt will tell you to pound sand if you request the same certificate more than 5 times a month, so completely deprovisioning should be rare, keep the server off when you are not using it.  
 > :warning: **Servers provisioned through the built in provisioning template in this Demo are not removed with the `aws-tower-teardown.yml` you must run the built-in deprovisioning job template to get rid of those before shutting down or removing Tower.

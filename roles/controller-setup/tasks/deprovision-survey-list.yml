@@ -22,7 +22,7 @@
 
 - name: Update  Deprovision Template
   awx.awx.job_template:
-    name: "3. Deprovision"
+    name: "2. Deprovision"
     job_type: "run"
     inventory: AWS
     project: Ansible Demo

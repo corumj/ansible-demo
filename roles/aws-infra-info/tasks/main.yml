@@ -7,7 +7,6 @@
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
         filters:
-          "tag:user": "{{ aws_user }}"
           "tag:demo": Ansible
       register: vpc_info 
 
@@ -18,7 +17,6 @@
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
         filters:
-          "tag:user": "{{ aws_user }}"
           "tag:demo": Ansible
       register: vpc_subnet_info
 
@@ -29,7 +27,6 @@
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
         filters:
-          "tag:user": "{{ aws_user }}"
           "tag:demo": Ansible
       register: vpc_route_info
 
@@ -40,6 +37,5 @@
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
         filters:
-          "tag:user": "{{ aws_user }}"
           "tag:demo": Ansible
       register: sec_info

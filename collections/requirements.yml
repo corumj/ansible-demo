@@ -1,8 +1,9 @@
 ---
 collections:
-  - community.aws
+  # - community.aws
   - ansible.windows
-  - community.windows
+  # - community.windows
   - amazon.aws
   - awx.awx
+  - containers.podman
   # - ansible.tower

@@ -130,10 +130,10 @@
       username: "admin"
       password: "{{ admin_password }}"
       host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_verify_ssl: true
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: true
 
 - name: Create AWS Windows Machine credential 
   awx.awx.credential:
@@ -148,10 +148,10 @@
       become_method: runas 
       become_username: Administrator 
       become_password: "{{ admin_password }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_verify_ssl: true
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: true
 
 - name: Create AWS Linux Machine credential 
   awx.awx.credential:
@@ -163,10 +163,10 @@
     inputs:
       username: ec2-user
       ssh_key_data: "{{ private_key }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_verify_ssl: true
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: true
 
 - name: Create AWS Credential 
   awx.awx.credential:
@@ -179,10 +179,10 @@
       username: "{{ lookup('ini', 'aws_access_key_id section=saml file=~/.aws/credentials') }}"
       password: "{{ lookup('ini', 'aws_secret_access_key section=saml file=~/.aws/credentials') }}"
       security_token: "{{ lookup('ini', 'aws_security_token section=saml file=~/.aws/credentials') }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_verify_ssl: true
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: true
 
 - name: Create AWS Inventory 
   awx.awx.inventory: 
@@ -190,10 +190,10 @@
     description: AWS Inventory 
     organization: Default 
     state: present 
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_verify_ssl: true
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: true
 
 - name: Create AWS Inventory Source
   awx.awx.inventory_source:
@@ -218,45 +218,45 @@
           parent_group: os
       compose:
         ansible_host: private_ip_address
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_verify_ssl: false
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: false
 
-- name: Create Ansible Demo Tower Project
+- name: Create Ansible Demo Project
   awx.awx.project:
     name: Ansible Demo 
     state: present
     wait: yes
     organization: Default 
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_verify_ssl: true
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: true
     scm_type: git 
     scm_url: https://github.com/corumj/ansible-demo.git
     scm_update_on_launch: yes 
     
-- name: Create Choose Your demo Template
-  awx.awx.job_template:
-    name: "1. Select a Demo to stage"
-    job_type: "run"
-    inventory: Demo Inventory
-    project: Ansible Demo
-    playbook: "choose-demo.yml"
-    credentials: 
-      - "Tower Credential"
-    survey_enabled: yes 
-    survey_spec: "{{ lookup('file', 'choose-demo.json') }}"
-    state: "present"
-    tower_username: "admin"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_verify_ssl: true
+# - name: Create Choose Your demo Template
+#   awx.awx.job_template:
+#     name: "1. Select a Demo to stage"
+#     job_type: "run"
+#     inventory: Demo Inventory
+#     project: Ansible Demo
+#     playbook: "choose-demo.yml"
+#     credentials: 
+#       - "Tower Credential"
+#     survey_enabled: yes 
+#     survey_spec: "{{ lookup('file', 'choose-demo.json') }}"
+#     state: "present"
+#     tower_username: "admin"
+#     tower_password: "{{ admin_password }}"
+#     tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+#     tower_verify_ssl: true
 
 - name: Create Provision Template
   awx.awx.job_template:
-    name: "2. Provision"
+    name: "1. Provision"
     job_type: "run"
     inventory: AWS
     project: Ansible Demo
@@ -272,7 +272,70 @@
     survey_enabled: yes 
     survey_spec: "{{ lookup('file', 'provision.json') }}"
     state: "present"
-    tower_username: "admin"
-    tower_password: "{{ admin_password }}"
-    tower_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
-    tower_verify_ssl: true
+    controller_username: "admin"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: true
+
+- name: Create ServiceNow Project
+  awx.awx.project:
+    name: ServiceNow 
+    state: present
+    wait: yes
+    organization: Default 
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: true
+    scm_type: git 
+    scm_url: https://github.com/corumj/ansible-servicenow-demo.git
+    scm_branch: platform
+    scm_update_on_launch: yes 
+
+- name: Create Linux Tasks Project
+  awx.awx.project:
+    name: Linux Tasks 
+    state: present
+    wait: yes
+    organization: Default 
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: true
+    scm_type: git 
+    scm_url: https://github.com/corumj/ansible-linux-tasks
+    scm_branch: platform
+    scm_update_on_launch: yes 
+
+- name: Create Windows Tasks Project
+  awx.awx.project:
+    name: Windows Tasks 
+    state: present
+    wait: yes
+    organization: Default 
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: true
+    scm_type: git 
+    scm_url: https://github.com/corumj/ansible-windows-admin-tasks
+    scm_update_on_launch: yes 
+
+- name: Create SNOW Initialize Demo template
+  awx.awx.job_template:
+    name: "SNOW - 1. Setup ServiceNow for demo"
+    job_type: "run"
+    inventory: AWS
+    project: ServiceNow
+    playbook: "initialize.yml"
+    credentials: 
+      - "Tower Credential"
+      - "AWS"
+    use_fact_cache: yes
+    survey_enabled: yes 
+    survey_spec: "{{ lookup('file', 'servicenow.json') }}"
+    state: "present"
+    controller_username: "admin"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ aws_user }}.ade.redhatgov.io"
+    validate_certs: true

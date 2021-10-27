@@ -1,0 +1,11 @@
+---
+- name: Setup Curated Demo Playbooks
+  block:
+    - name: Windows Playbooks
+      include_tasks: windows.yml
+
+    - name: Linux Playbooks 
+      include_tasks: linux.yml
+
+    - name: Misc Playbooks
+      include_tasks: misc.yml

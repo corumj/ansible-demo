@@ -4,31 +4,22 @@
   connection: local 
   gather_facts: no
   vars:
-    group_name: "tower"
-    short_desc: "tower"
+    group_name: "controller"
+    short_desc: "controller"
     server_env: "test" 
     server_os: "linux"
     business_domain_name: "Red Hat"
   tasks:
-  - name: Find AWS User information
-    amazon.aws.aws_caller_info:
-      profile: "{{ aws_profile }}"
-      region: "{{ aws_region }}"
-      aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-      aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-    register: user
-
-  - name: Start Tower EC2 Instance 
+  - name: Start Controller EC2 Instance 
     community.aws.ec2_instance:
       profile: "{{ aws_profile }}"
       region: "{{ aws_region }}"
       filters:
-        tag:group_name: "tower"
-        tag:short_desc: "tower"
+        tag:group_name: "controller"
+        tag:short_desc: "controller"
         tag:server_env: "test" 
         tag:server_os: "linux"
         tag:business_domain_name: "Red Hat"
-        tag:user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
       state: running
       wait: yes
     register: ec2
@@ -37,8 +28,8 @@
     community.aws.route53:
       profile: "{{ aws_profile }}"
       state: present 
-      zone: redhatgov.io
-      record: "ansible.{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}.ade.redhatgov.io"
+      zone: {{ top_level_domain }}
+      record: "ansible.{{ top_level_domain }}"
       type: A
       ttl: 300
       value: "{{ ec2.instances[0].public_ip_address }}"
@@ -51,4 +42,4 @@
     debug:
       msg: 
         - "It will take around 5 minutes for the Route 53 domain to update before you can access tower"
-        - "Access Tower here: https://ansible.{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}.ade.redhatgov.io"
+        - "Access Tower here: https://ansible.{{ top_level_domain }}"

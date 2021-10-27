@@ -3,11 +3,10 @@
   amazon.aws.ec2_vpc_net:
     profile: "{{ aws_profile }}"
     state: present
-    name: "{{ aws_user }}-ansible-vpc"
+    name: "ansible-vpc"
     cidr_block: 10.0.0.0/16
     tenancy: default
     tags:
-      user: "{{ aws_user }}"
       demo: Ansible 
   register: demo_vpc
 
@@ -17,8 +16,7 @@
     state: present
     vpc_id: "{{ demo_vpc.vpc.id }}"
     tags:
-      Name: "{{ aws_user }}-ansible-vpc-igw"
-      user: "{{ aws_user }}"
+      Name: "ansible-vpc-igw"
       demo: Ansible 
   register: gateway
 
@@ -26,7 +24,7 @@
   amazon.aws.ec2_group: 
     profile: "{{ aws_profile }}"
     state: present
-    name: "{{ aws_user }}-ansible-sec-group"
+    name: "ansible-sec-group"
     description: Inbound WinRM and RDP, http for demo servers and internal AD ports 
     rules:
       - proto: tcp 
@@ -73,8 +71,7 @@
         cidr_ip: 0.0.0.0/0
     vpc_id: "{{ demo_vpc.vpc.id }}"
     tags:
-      Name: "{{ aws_user }}-ansible-sec-group"
-      user: "{{ aws_user }}"
+      Name: "ansible-sec-group"
       demo: Ansible 
 
 - name: Create a subnet on the VPC for our apps
@@ -85,8 +82,7 @@
     cidr: 10.0.0.0/16
     map_public: yes
     tags:
-      Name: "{{ aws_user }}-ansible-subnet"
-      user: "{{ aws_user }}"
+      Name: "ansible-subnet"
       demo: Ansible 
   register: demo_subnet
 
@@ -101,13 +97,12 @@
       - dest: 0.0.0.0/0 
         gateway_id: "{{ gateway.gateway_id }}"
     tags: 
-      Name: "{{ aws_user }}-ansible-vpc-rtbl"
-      user: "{{ aws_user }}"
+      Name: "ansible-vpc-rtbl"
       demo: Ansible 
     
 - name: Generate AWS Keypair 
   amazon.aws.ec2_key: 
     profile: "{{ aws_profile }}"
-    name: "{{ aws_user }}-ansible-demo-key"
+    name: "ansible-demo-key"
     key_material: "{{ public_key }}"
     state: present

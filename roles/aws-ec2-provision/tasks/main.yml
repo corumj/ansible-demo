@@ -1,21 +1,32 @@
 --- 
 - name: Setup EC2 Windows instance 
   block:
+    - name: Find AMI for Windows Host 
+      amazon.aws.ec2_ami_info:
+        region: "{{ aws_region }}"
+        filters:
+          name: 'Windows_Server-2019-English-Core-Base*'
+      register: amis
+
+    - name: WINDOWS | Instance | save ami
+      set_fact:
+        win_instance_ami: >
+          {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+          
     - name: Provision EC2 Windows Instance 
       amazon.aws.ec2_instance:
         profile: "{{ aws_profile | default('') }}"
         state: started
-        name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}-{{ aws_user }}"
+        name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}"
         security_group: "{{ sec_info.security_groups[0].group_name }}"
         vpc_subnet_id: "{{ vpc_subnet_info.subnets[0].subnet_id }}"
-        image_id: "{{ aws_windows_ami }}"
+        image_id: "{{ win_instance_ami.image_id }}"
         instance_type: "{{ aws_instance_type }}"
         tags: 
           group_name: "{{ group_name }}"
           short_desc: "{{ short_desc }}"
           server_env: "{{ server_env }}" 
           server_os: "{{ server_os }}"
-          user: "{{ aws_user }}"
           demo: Ansible 
           business_domain_name: "{{ business_domain_name }}"
         user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
@@ -26,27 +37,47 @@
       register: ec2 
   when: server_os == 'windows'
 
-- name: Provision EC2 Linux Instance 
-  amazon.aws.ec2_instance:
-    profile: "{{ aws_profile | default('') }}"
-    state: started
-    name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}-{{ aws_user }}"
-    security_group: "{{ sec_info.security_groups[0].group_name }}"
-    vpc_subnet_id: "{{ vpc_subnet_info.subnets[0].subnet_id }}"
-    image_id: "{{ aws_linux_ami }}"
-    instance_type: "{{ aws_instance_type }}"
-    key_name: "{{ aws_user }}-ansible-demo-key"
-    tags: 
-      group_name: "{{ group_name }}"
-      short_desc: "{{ short_desc }}"
-      server_env: "{{ server_env }}" 
-      server_os: "{{ server_os }}"
-      business_domain_name: "{{ business_domain_name }}"
-      user: "{{ aws_user }}"
-      demo: Ansible 
-    wait: yes
-    region: "{{ aws_region }}"
-    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-  register: ec2 
+- name: Setup EC2 Linux Instance
+  block:  
+    - name: Find AMI for Linux Host
+      amazon.aws.ec2_ami_info:
+        region: "{{ aws_region }}"
+        owners: 309956199498
+        filters:
+          name: 'RHEL-8*HVM-*Hourly*'
+          architecture: x86_64
+      register: amis
+
+    - name: save ami for rhel node
+      set_fact:
+        node_ami_rhel: >
+          {{ amis.images | selectattr('name', 'defined') | sort(attribute='name') | last }}
+
+    - name: debug
+      debug:
+        var: node_ami_rhel
+
+    - name: Provision EC2 Linux Instance 
+      amazon.aws.ec2_instance:
+        profile: "{{ aws_profile | default('') }}"
+        state: started
+        name: "{{ server_env }}-{{ short_desc }}-{{ server_os }}"
+        security_group: "{{ sec_info.security_groups[0].group_name }}"
+        vpc_subnet_id: "{{ vpc_subnet_info.subnets[0].subnet_id }}"
+        image_id: "{{ node_ami_rhel.image_id }}"
+        instance_type: "{{ aws_instance_type }}"
+        key_name: "ansible-demo-key"
+        tags: 
+          group_name: "{{ group_name }}"
+          short_desc: "{{ short_desc }}"
+          server_env: "{{ server_env }}" 
+          server_os: "{{ server_os }}"
+          business_domain_name: "{{ business_domain_name }}"
+          demo: Ansible 
+        wait: yes
+        region: "{{ aws_region }}"
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: ec2 
+
   when: server_os == 'linux'
