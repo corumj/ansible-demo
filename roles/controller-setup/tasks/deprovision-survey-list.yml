@@ -9,7 +9,6 @@
       instance-state-name: running 
       # tag:business_domain_name: Red Hat 
       tag:demo: Ansible 
-      tag:short_desc: "!controller" 
   register: ec2 
 
 - name: Update  Deprovision Template
