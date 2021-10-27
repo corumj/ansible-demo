@@ -53,10 +53,6 @@
         node_ami_rhel: >
           {{ amis.images | selectattr('name', 'defined') | sort(attribute='name') | last }}
 
-    - name: debug
-      debug:
-        var: node_ami_rhel
-
     - name: Provision EC2 Linux Instance 
       amazon.aws.ec2_instance:
         profile: "{{ aws_profile | default('') }}"
