@@ -5,7 +5,6 @@
     state: absent
     filters:
       # "tag:business_domain_name": "{{ business_domain_name }}"
-      "tag:user": "{{ aws_user }}"
       "tag:short_desc": "{{ short_desc }}"
       "tag:demo": Ansible 
       instance-state-name: running 
