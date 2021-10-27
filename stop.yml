@@ -10,23 +10,15 @@
     server_os: "linux"
     business_domain_name: "Red Hat"
   tasks:
-  - name: Find AWS User information
-    amazon.aws.aws_caller_info:
-      profile: "{{ aws_profile }}"
-      region: "{{ aws_region }}"
-      aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-      aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-    register: user
-
   - name: Stop Tower EC2 Instance 
-    amazon.aws.ec2:
+    amazon.aws.ec2_instance:
       profile: "{{ aws_profile }}"
       region: "{{ aws_region }}"
-      instance_tags:
-        group_name: "tower"
-        short_desc: "tower"
-        server_env: "test" 
-        server_os: "linux"
-        business_domain_name: "Red Hat"
-        user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
+      filters:
+        tag:group_name: "controller"
+        tag:short_desc: "controller"
+        tag:server_env: "test" 
+        tag:server_os: "linux"
+        tag:business_domain_name: "Red Hat"
+        instance-state-name: running
       state: stopped
