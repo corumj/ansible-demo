@@ -1,17 +1,11 @@
 ---
-- name: Start Tower Instance
+- name: Start Controller Instance
   hosts: localhost
   connection: local 
   gather_facts: no
-  vars:
-    group_name: "controller"
-    short_desc: "controller"
-    server_env: "test" 
-    server_os: "linux"
-    business_domain_name: "Red Hat"
   tasks:
-  - name: Start Controller EC2 Instance 
-    community.aws.ec2_instance:
+  - name: Find Controller EC2 Instance 
+    amazon.aws.ec2_instance_info:
       profile: "{{ aws_profile }}"
       region: "{{ aws_region }}"
       filters:
@@ -20,15 +14,37 @@
         tag:server_env: "test" 
         tag:server_os: "linux"
         tag:business_domain_name: "Red Hat"
-      state: running
+        instance-state-name: stopped
+    register: instance
+
+  - name: Start Controller EC2 Instance
+    amazon.aws.ec2_instance:
+      profile: "{{ aws_profile }}"
+      region: "{{ aws_region }}"
+      instance_ids:
+        - "{{ instance.instances[0].instance_id }}"
       wait: yes
+      state: running 
+    register: ec2_running
+
+  - name: Find Controller EC2 Instance Public IP Address
+    amazon.aws.ec2_instance_info:
+      profile: "{{ aws_profile }}"
+      region: "{{ aws_region }}"
+      filters:
+        tag:group_name: "controller"
+        tag:short_desc: "controller"
+        tag:server_env: "test" 
+        tag:server_os: "linux"
+        tag:business_domain_name: "Red Hat"
+        instance-state-name: running
     register: ec2
 
   - name: Setup Route 53 for domain name 
     community.aws.route53:
       profile: "{{ aws_profile }}"
       state: present 
-      zone: {{ top_level_domain }}
+      zone: "{{ top_level_domain }}"
       record: "ansible.{{ top_level_domain }}"
       type: A
       ttl: 300

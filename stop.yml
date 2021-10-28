@@ -3,12 +3,6 @@
   hosts: localhost
   connection: local 
   gather_facts: no
-  vars:
-    group_name: "tower"
-    short_desc: "tower"
-    server_env: "test" 
-    server_os: "linux"
-    business_domain_name: "Red Hat"
   tasks:
   - name: Stop Tower EC2 Instance 
     amazon.aws.ec2_instance:
