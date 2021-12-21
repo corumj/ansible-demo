@@ -19,33 +19,22 @@
   #     private: yes
       
   tasks:
-  - name: Check if tower admin passwords match
-    fail:
-      msg: Admin passwords do not match, please rerun setup.sh and reenter initial password 
-    when: prompt_admin_password != prompt_admin_password_confirm
-
-  - name: Find AWS User information
-    amazon.aws.aws_caller_info:
-      profile: "{{ aws_profile }}"
-    register: user
+  # - name: Check if tower admin passwords match
+  #   fail:
+  #     msg: Admin passwords do not match, please rerun setup.sh and reenter initial password 
+  #   when: prompt_admin_password != prompt_admin_password_confirm
 
   - name: Setup AWS
     include_role:
       name: aws-infra-setup 
-    vars:
-      aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
       
   - name: Get AWS infra info 
     include_role:
       name: aws-infra-info
-    vars:
-      aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
     
   - name: call provision role to create a RHEL 8 server to install Tower on 
     include_role:
       name: aws-ec2-provision 
-    vars: 
-      aws_user: "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}"
 
   - name: Add the host 
     add_host:
@@ -54,7 +43,7 @@
         - tower 
       ansible_ssh_private_key_file: ~/.ssh/id_rsa 
       ansible_user: ec2-user
-      admin_password: "{{ prompt_admin_password }}"
+      admin_password: "{{ admin_password }}"
       tower_ip: "{{ ec2.instances[0].public_ip_address }}"
 
 - name: Install tower 
@@ -82,4 +71,11 @@
     - name: Add Projects 
       include_role:
         name: controller-projects 
-        
+
+    - name: Add Workflows 
+      include_role:
+        name: controller-workflows
+
+    - debug:
+        msg: "Access Tower here: https://ansible.{{ top_level_domain }}"
+          

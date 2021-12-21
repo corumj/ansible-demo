@@ -1,8 +1,0 @@
----
-- name: Debug
-  hosts: localhost
-  connection: local
-  tasks:
-    - name: Debug with hostvars
-      debug:
-        var: host_vars

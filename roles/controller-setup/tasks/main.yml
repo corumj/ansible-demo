@@ -1,7 +1,7 @@
 ---
-- name: Download installer 
-  include_role: 
-    name: aap_download
+# - name: Download installer 
+#   include_role: 
+#     name: aap_download
 
 - name: Create tmp directory to store AAP tar.gz
   tempfile:
@@ -126,9 +126,9 @@
   containers.podman.podman_image:
     name: "{{ item }}"
   loop:
-    - "registry.redhat.io/ansible-automation-platform-20-early-access/ee-supported-rhel8:2.0.0"
-    - "registry.redhat.io/ansible-automation-platform-20-early-access/ee-29-rhel8:2.0.0"
-    - "registry.redhat.io/ansible-automation-platform-20-early-access/ee-minimal-rhel8:2.0.0"
+    - "registry.redhat.io/ansible-automation-platform-21/ee-supported-rhel8"
+    - "registry.redhat.io/ansible-automation-platform-21/ee-29-rhel8"
+    - "registry.redhat.io/ansible-automation-platform-21/ee-minimal-rhel8"
   register: podman_pull_supported
   until: podman_pull_supported is not failed
   retries: 5

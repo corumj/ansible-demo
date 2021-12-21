@@ -1,0 +1,83 @@
+---
+- name: Create Linux Tasks Project
+  awx.awx.project:
+    name: Linux Tasks 
+    state: present
+    wait: yes
+    organization: Default 
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    validate_certs: true
+    scm_type: git 
+    scm_url: https://github.com/corumj/ansible-linux-tasks
+    scm_branch: platform
+    scm_update_on_launch: yes 
+
+- name: Create Linux - RHEL System Role Crypto Policy template
+  awx.awx.job_template:
+    name: "[ Linux ] RHEL System Role crypto policy"
+    job_type: run 
+    organization: Default 
+    inventory: AWS 
+    project: Linux Tasks 
+    playbook: crypto.yml 
+    credentials:
+      - AWS Linux 
+    state: present 
+    ask_limit_on_launch: yes 
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    use_fact_cache: yes 
+
+- name: Create Linux - RHEL System Role timesync template 
+  awx.awx.job_template:
+    name: "[ Linux ] RHEL System Role timesync"
+    job_type: run 
+    organization: Default 
+    inventory: AWS 
+    project: Linux Tasks 
+    playbook: timesync.yml 
+    credentials:
+      - AWS Linux 
+    state: present 
+    ask_limit_on_launch: yes 
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    use_fact_cache: yes 
+
+- name: Create Linux - Galaxy Role Setup Postgresql template 
+  awx.awx.job_template:
+    name: "[ Linux ] Galaxy Role: Setup Postgresql"
+    job_type: run 
+    organization: Default 
+    inventory: AWS 
+    project: Linux Tasks 
+    playbook: setup_postgres.yml 
+    credentials:
+      - AWS Linux 
+    state: present 
+    ask_limit_on_launch: yes 
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    use_fact_cache: yes 
+
+- name: Create Linux - Deploy GoAddr API template 
+  awx.awx.job_template:
+    name: "[ Linux ] Deploy GoAddr API"
+    job_type: run 
+    organization: Default 
+    inventory: AWS 
+    project: Linux Tasks 
+    playbook: deploy_goaddr_api.yml 
+    credentials:
+      - AWS Linux 
+    state: present 
+    ask_limit_on_launch: yes
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    use_fact_cache: yes 

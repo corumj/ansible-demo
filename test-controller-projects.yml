@@ -1,0 +1,10 @@
+---
+- name: Test controller-projects
+  hosts: localhost
+  connection: local 
+  gather_facts: no
+
+  tasks:
+    - name: setup projects
+      include_role:
+        name: controller-projects

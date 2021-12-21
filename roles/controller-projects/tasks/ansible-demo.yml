@@ -11,4 +11,61 @@
     validate_certs: true
     scm_type: git 
     scm_url: https://github.com/corumj/ansible-demo.git
+    scm_branch: OpenEnvironments
     scm_update_on_launch: yes 
+
+- name: Create Provision Template
+  awx.awx.job_template:
+    name: "1. Provision"
+    job_type: "run"
+    inventory: AWS
+    project: Ansible Demo
+    playbook: "provision.yml"
+    credentials: 
+      - "Tower Credential"
+      - "AWS"
+      - "AWS Windows"
+    extra_vars:
+      aws_profile: ''
+    ask_variables_on_launch: yes
+    use_fact_cache: yes
+    allow_simultaneous: yes
+    survey_enabled: yes 
+    survey_spec: "{{ lookup('file', 'provision.json') }}"
+    state: "present"
+    controller_username: "admin"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    validate_certs: true
+
+- name: Create  Deprovision Template
+  awx.awx.job_template:
+    name: "2. Deprovision"
+    job_type: "run"
+    inventory: AWS
+    project: Ansible Demo
+    playbook: "deprovision.yml"
+    credentials: 
+      - "Tower Credential"
+      - "AWS"
+    extra_vars:
+      aws_profile: ''
+    ask_variables_on_launch: yes
+    allow_simultaneous: yes
+    state: "present"
+    controller_username: "admin"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    validate_certs: true
+
+- name: Remove Demo Job Template 
+  awx.awx.job_template:
+    name: "Demo Job Template"
+    organization: Default 
+    inventory: AWS 
+    project: Linux Tasks 
+    state: absent 
+    controller_username: "{{ tower_username }}"
+    controller_password: "{{ admin_password }}"
+    controller_host: "https://ansible.{{ top_level_domain }}"
+    use_fact_cache: yes 

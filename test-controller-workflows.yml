@@ -1,0 +1,10 @@
+---
+- name: Test controller-workflows
+  hosts: localhost
+  connection: local 
+  gather_facts: no
+
+  tasks:
+    - name: setup workflows
+      include_role:
+        name: controller-workflows

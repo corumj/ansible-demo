@@ -1,0 +1,10 @@
+---
+- name: Test controller-inventory
+  hosts: localhost
+  connection: local 
+  gather_facts: no
+
+  tasks:
+    - name: setup inventory
+      include_role:
+        name: controller-inventory
