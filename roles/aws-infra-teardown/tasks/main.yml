@@ -4,7 +4,6 @@
       amazon.aws.ec2_vpc_net_info:
         profile: "{{ aws_profile }}"
         filters:
-          "tag:user": "{{ aws_user }}"
           "tag:demo": Ansible
       register: vpc_info 
 
@@ -12,7 +11,6 @@
       amazon.aws.ec2_vpc_subnet_info:
         profile: "{{ aws_profile }}"
         filters:
-          "tag:user": "{{ aws_user }}"
           "tag:demo": Ansible
       register: vpc_subnet_info
 
@@ -21,7 +19,6 @@
         profile: "{{ aws_profile }}"
         region: "{{ aws_region }}"
         filters:
-          "tag:user": "{{ aws_user }}"
           "tag:demo": Ansible
       register: vpc_route_info
 
@@ -29,7 +26,6 @@
       amazon.aws.ec2_group_info:
         profile: "{{ aws_profile }}"
         filters:
-          "tag:user": "{{ aws_user }}"
           "tag:demo": Ansible
       register: sec_info
 
