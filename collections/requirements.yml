@@ -6,7 +6,8 @@ collections:
   # - community.windows
   - name: amazon.aws
     version: 3.0.0
-  - awx.awx
+  - name: ansible.controller
+    version: 4.1.0 
   - containers.podman
   # - ansible.tower
   - community.general
