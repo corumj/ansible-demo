@@ -36,7 +36,7 @@
         tasks_from: deprovision-survey-list.yml
 
     - name: Update AWS Inventory 
-      awx.awx.inventory_source_update:
+      ansible.controller.inventory_source_update:
         name: AWS  
         inventory: AWS
         wait: True
