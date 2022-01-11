@@ -23,6 +23,7 @@ This demo environment incorporates a variety of playbooks from other Git project
 
 # Requirements:
   * Red Hat Open Environments "AWS Blank Open Environment" provisioning email with AWS keys and top level domain.
+  * Download a copy of the Bundled AAP 2.1 installer and name it aap.tar.gz in the root folder of this project.  
   * SSH keys at ~/.ssh (you can update the `group_vars/all.yml` file with the path of the key you want to use, by default it's just `~/.ssh/id_rsa`)
   * Manifest file for registering Controller, needs to be downloaded and placed in this repo's root folder as `manifest.zip`  See obtaining a subscription manifest for Tower [here](https://docs.ansible.com/ansible-tower/latest/html/userguide/import_license.html#obtaining-a-subscriptions-manifest)
   * Python modules on your local machine running Ansible Core:
