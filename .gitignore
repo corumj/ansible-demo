@@ -4,3 +4,4 @@ debug.yml
 extra_vars.yml
 aap.tar.gz
 .DS_Store
+ansible.cfg
