@@ -33,6 +33,7 @@ This demo environment incorporates a variety of playbooks from other Git project
     - Create a Red Hat API token at https://access.redhat.com/management/api 
   * An Automation Hub offline token
     - Create a token for Automation Hub at https://console.redhat.com/ansible/automation-hub/token
+  * Setup the included ansible_template.cfg file with your offline token and URLs from https://console.redhat.com 
     
 # Setup
 1. Update your boto profile in `~/.aws/credentials`.  Detailed instructions can be found here, https://github.com/ansible/workshops/blob/devel/docs/setup.md but it should look approximately like this:
