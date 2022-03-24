@@ -1,6 +1,6 @@
 ---
 - name: Create a credential for Galaxy 
-  awx.awx.credential:
+  ansible.controller.credential:
     name: ServiceNow Galaxy 
     description: Credential for SNOW org to access Galaxy
     organization: Default
@@ -20,7 +20,7 @@
 #   delegate_to: localhost
     
 - name: Setup ServiceNow project 
-  awx.awx.project:
+  ansible.controller.project:
     name: ServiceNow 
     state: present
     wait: yes
@@ -35,7 +35,7 @@
     scm_update_on_launch: yes 
 
 - name: Setup ServiceNow - Initialize job template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "SNOW- Initialize Demo"
     job_type: "run"
     inventory: AWS
@@ -54,7 +54,7 @@
     tower_verify_ssl: true
 
 - name: Create tower team
-  awx.awx.team:
+  ansible.controller.team:
     name: ServiceNow
     description: ServiceNow administrators
     organization: Default
@@ -65,7 +65,7 @@
     tower_verify_ssl: true
 
 - name: Add ServiceNow user
-  awx.awx.user:
+  ansible.controller.user:
     username: servicenow
     password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     email: ServiceNow@example.local
@@ -78,21 +78,21 @@
     tower_verify_ssl: true
 
 - name: Promote ServiceNow team to ServiceNow project admin
-  awx.awx.role:
+  ansible.controller.role:
     team: ServiceNow
     organization: Default
     role: project_admin
     state: present
 
 - name: Add ServiceNow user to team 
-  awx.awx.role:
+  ansible.controller.role:
     user: servicenow 
     target_team: ServiceNow
     role: member 
     state: present
 
 - name: Add team permissions to init playbook
-  awx.awx.role:
+  ansible.controller.role:
     team: ServiceNow
     job_template: SNOW- Initialize Demo
     role: admin 

@@ -1,6 +1,6 @@
 ---
 - name: Create ServiceNow Project
-  awx.awx.project:
+  ansible.controller.project:
     name: ServiceNow 
     state: present
     wait: yes
@@ -15,7 +15,7 @@
     scm_update_on_launch: yes 
 
 - name: Create SNOW Initialize Demo template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "[SNOW] 1. Setup Controller and ServiceNow for closed-loop demo"
     job_type: "run"
     inventory: AWS

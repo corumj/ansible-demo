@@ -1,6 +1,6 @@
 ---
 - name: Create Ansible Demo Project
-  awx.awx.project:
+  ansible.controller.project:
     name: Ansible Demo 
     state: present
     wait: yes
@@ -15,7 +15,7 @@
     scm_update_on_launch: yes 
 
 - name: Create Provision Template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "1. Provision"
     job_type: "run"
     inventory: AWS
@@ -39,7 +39,7 @@
     validate_certs: true
 
 - name: Create  Deprovision Template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "2. Deprovision"
     job_type: "run"
     inventory: AWS
@@ -59,7 +59,7 @@
     validate_certs: true
 
 - name: Remove Demo Job Template 
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Demo Job Template"
     organization: Default 
     inventory: AWS 

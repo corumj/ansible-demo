@@ -1,6 +1,6 @@
 ---
 - name: Setup Linux project 
-  awx.awx.project:
+  ansible.controller.project:
     name: Linux Tasks 
     state: present
     wait: yes
@@ -15,7 +15,7 @@
     scm_update_on_launch: yes 
 
 - name: Setup Patching Init playbook
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Linux - Patching Demo 1. Provision Servers"
     job_type: "run"
     inventory: AWS

@@ -1,6 +1,6 @@
 ---
 - name: Create AWS Inventory 
-  awx.awx.inventory: 
+  ansible.controller.inventory: 
     name: AWS
     description: AWS Inventory 
     organization: Default 
@@ -11,7 +11,7 @@
     validate_certs: true
 
 - name: Create AWS Inventory Source
-  awx.awx.inventory_source:
+  ansible.controller.inventory_source:
     state: present  
     name: AWS 
     description: AWS inventory source 

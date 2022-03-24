@@ -120,7 +120,7 @@
     creates: /etc/letsencrypt/live/ansible.{{ aws_user }}.ade.redhatgov.io/fullchain.pem
 
 - name: Setup Tower Credential 
-  awx.awx.credential:
+  ansible.controller.credential:
     state: present
     name: Tower Credential
     description: Tower Credential to automate Tower itself 
@@ -136,7 +136,7 @@
     validate_certs: true
 
 - name: Create AWS Windows Machine credential 
-  awx.awx.credential:
+  ansible.controller.credential:
     state: present 
     name: AWS Windows 
     description: AWS Windows Machine Credential 
@@ -154,7 +154,7 @@
     validate_certs: true
 
 - name: Create AWS Linux Machine credential 
-  awx.awx.credential:
+  ansible.controller.credential:
     state: present 
     name: AWS Linux 
     description: AWS Linux Machine Credential 
@@ -169,7 +169,7 @@
     validate_certs: true
 
 - name: Create AWS Credential 
-  awx.awx.credential:
+  ansible.controller.credential:
     state: present
     name: AWS
     description: AWS Credential from saml 
@@ -185,7 +185,7 @@
     validate_certs: true
 
 - name: Create AWS Inventory 
-  awx.awx.inventory: 
+  ansible.controller.inventory: 
     name: AWS
     description: AWS Inventory 
     organization: Default 
@@ -196,7 +196,7 @@
     validate_certs: true
 
 - name: Create AWS Inventory Source
-  awx.awx.inventory_source:
+  ansible.controller.inventory_source:
     state: present  
     name: AWS 
     description: AWS inventory source 
@@ -224,7 +224,7 @@
     validate_certs: false
 
 - name: Create Ansible Demo Project
-  awx.awx.project:
+  ansible.controller.project:
     name: Ansible Demo 
     state: present
     wait: yes
@@ -238,7 +238,7 @@
     scm_update_on_launch: yes 
     
 # - name: Create Choose Your demo Template
-#   awx.awx.job_template:
+#   ansible.controller.job_template:
 #     name: "1. Select a Demo to stage"
 #     job_type: "run"
 #     inventory: Demo Inventory
@@ -255,7 +255,7 @@
 #     tower_verify_ssl: true
 
 - name: Create Provision Template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "1. Provision"
     job_type: "run"
     inventory: AWS
@@ -278,7 +278,7 @@
     validate_certs: true
 
 - name: Create ServiceNow Project
-  awx.awx.project:
+  ansible.controller.project:
     name: ServiceNow 
     state: present
     wait: yes
@@ -293,7 +293,7 @@
     scm_update_on_launch: yes 
 
 - name: Create Linux Tasks Project
-  awx.awx.project:
+  ansible.controller.project:
     name: Linux Tasks 
     state: present
     wait: yes
@@ -308,7 +308,7 @@
     scm_update_on_launch: yes 
 
 - name: Create Windows Tasks Project
-  awx.awx.project:
+  ansible.controller.project:
     name: Windows Tasks 
     state: present
     wait: yes
@@ -322,7 +322,7 @@
     scm_update_on_launch: yes 
 
 - name: Create SNOW Initialize Demo template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "SNOW - 1. Setup ServiceNow for demo"
     job_type: "run"
     inventory: AWS

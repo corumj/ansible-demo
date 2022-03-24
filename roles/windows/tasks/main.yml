@@ -1,6 +1,6 @@
 ---
 # - name: Create tower organization for Windows
-#   awx.awx.organization:
+#   ansible.controller.organization:
 #     name: Windows
 #     description: "Windows admins"
 #     state: present
@@ -10,7 +10,7 @@
 #     tower_verify_ssl: true
 
 # - name: Create a credential for Galaxy in the Windows Org
-#   awx.awx.credential:
+#   ansible.controller.credential:
 #     name: Windows Galaxy 
 #     description: Credential for Windows org to access Galaxy
 #     organization: Default
@@ -24,7 +24,7 @@
 #     tower_verify_ssl: true
 
 - name: Setup Windows project 
-  awx.awx.project:
+  ansible.controller.project:
     name: Windows 
     state: present
     wait: yes
@@ -39,7 +39,7 @@
     scm_update_on_launch: yes 
 
 - name: Setup Windows - Initialize job template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Windows - 1. Initialize Demo"
     job_type: "run"
     inventory: AWS
@@ -58,7 +58,7 @@
     tower_verify_ssl: true
 
 - name: Create Windows - 2. Setup AD Controller template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Windows - 2. Setup AD Controller template (auto runs after init)"
     job_type: "run"
     inventory: AWS
@@ -80,7 +80,7 @@
     tower_verify_ssl: true
 
 - name: Create tower team
-  awx.awx.team:
+  ansible.controller.team:
     name: Windows
     description: Windows administrators
     organization: Default
@@ -91,7 +91,7 @@
     tower_verify_ssl: true
 
 - name: Add Windows user
-  awx.awx.user:
+  ansible.controller.user:
     username: windows
     password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     email: Windows@example.local
@@ -104,21 +104,21 @@
     tower_verify_ssl: true
 
 - name: promote Windows team to Windows project admin
-  awx.awx.role:
+  ansible.controller.role:
     team: Windows
     organization: Default
     role: project_admin
     state: present
 
 - name: Add Windows user to team 
-  awx.awx.role:
+  ansible.controller.role:
     user: windows 
     target_team: Windows
     role: member 
     state: present
 
 - name: Add team permissions to init playbook
-  awx.awx.role:
+  ansible.controller.role:
     team: Windows
     job_template: Windows - 1. Initialize Demo
     role: admin 

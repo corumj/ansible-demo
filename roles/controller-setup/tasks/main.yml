@@ -36,7 +36,7 @@
   args:
     chdir: "{{ aap_dir }}"
   async: 1400
-  poll: 15
+  poll: 30
 
 - name: wait for Automation Controller to be up
   uri:
@@ -135,7 +135,7 @@
   delay: 15
 
 - name: create container registry credential
-  awx.awx.credential:
+  ansible.controller.credential:
     name: registry.redhat.io credential
     organization: Default
     credential_type: Container Registry
@@ -149,7 +149,7 @@
       host: "registry.redhat.io"
 
 - name: update default EE to use credential
-  awx.awx.execution_environment:
+  ansible.controller.execution_environment:
     name: "Default execution environment"
     image: "registry.redhat.io/ansible-automation-platform-20-early-access/ee-supported-rhel8:2.0.0"
     pull: missing

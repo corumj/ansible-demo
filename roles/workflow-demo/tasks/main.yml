@@ -1,6 +1,6 @@
 ---
 - name: Setup Linux Tasks project
-  awx.awx.project:
+  ansible.controller.project:
     name: Linux Tasks 
     state: present
     wait: yes
@@ -16,7 +16,7 @@
     scm_update_on_launch: yes 
 
 - name: Setup Windows Tasks project
-  awx.awx.project:
+  ansible.controller.project:
     name: Windows Tasks 
     state: present
     wait: yes
@@ -31,7 +31,7 @@
     scm_update_on_launch: yes 
 
 - name: Setup Linux - RHEL System Role NTP Config template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Linux - RHEL System Role NTP Config"
     job_type: "run"
     inventory: AWS
@@ -49,7 +49,7 @@
     validate_certs: true
 
 - name: Setup Linux - RHEL System Role Crypto Policy template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Linux - RHEL System Role Crypto Policy"
     job_type: "run"
     inventory: AWS
@@ -67,7 +67,7 @@
     validate_certs: true
 
 - name: Setup Linux - PostgreSQL Template 
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Linux - Install and setup PostgreSQL"
     job_type: "run"
     inventory: AWS
@@ -85,7 +85,7 @@
     validate_certs: true
 
 - name: Setup Linux - Install nodeJS template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Linux - Install and setup NodeJS"
     job_type: "run"
     inventory: AWS
@@ -103,7 +103,7 @@
     validate_certs: true
 
 - name: Setup Linux - Deploy nodeJS backend template
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Linux - Deploy NodeJS Backend"
     job_type: "run"
     inventory: AWS
@@ -121,7 +121,7 @@
     validate_certs: true
 
 - name: Setup Windows - Configure DNS template 
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Windows - Configure DNS"
     job_type: "run"
     inventory: AWS
@@ -139,7 +139,7 @@
     validate_certs: true
 
 - name: Setup Windows - Configure IIS template 
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Windows - Configure DNS"
     job_type: "run"
     inventory: AWS
@@ -157,7 +157,7 @@
     validate_certs: true
 
 - name: Setup Windows - Deploy Front end to IIS template 
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: "Windows - Deploy Demo Front End"
     job_type: "run"
     inventory: AWS
@@ -175,7 +175,7 @@
     validate_certs: true
 
 # - name: Setup workflow template to deploy the stack
-#   awx.awx.workflow_job_template:
+#   ansible.controller.workflow_job_template:
 #     name: Demo - Deploy application stack
 #     inventory: AWX
 #     extra_vars: {}

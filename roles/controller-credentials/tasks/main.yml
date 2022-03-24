@@ -1,6 +1,6 @@
 ---
 - name: Setup Tower Credential 
-  awx.awx.credential:
+  ansible.controller.credential:
     state: present
     name: Tower Credential
     description: Tower Credential to automate Tower itself 
@@ -16,7 +16,7 @@
     validate_certs: true
 
 - name: Create AWS Windows Machine credential 
-  awx.awx.credential:
+  ansible.controller.credential:
     state: present 
     name: AWS Windows 
     description: AWS Windows Machine Credential 
@@ -34,7 +34,7 @@
     validate_certs: true
 
 - name: Create AWS Linux Machine credential 
-  awx.awx.credential:
+  ansible.controller.credential:
     state: present 
     name: AWS Linux 
     description: AWS Linux Machine Credential 
@@ -49,7 +49,7 @@
     validate_certs: true
 
 - name: Create AWS Credential 
-  awx.awx.credential:
+  ansible.controller.credential:
     state: present
     name: AWS
     description: AWS Credential from saml 
@@ -64,7 +64,7 @@
     validate_certs: true
 
 - name: Create Automation Hub Credential 
-  awx.awx.credential:
+  ansible.controller.credential:
     state: present
     name: Automation Hub
     description: Automation Hub Credentials 
@@ -80,7 +80,7 @@
     validate_certs: true  
 
 - name: Update Default org to use Automation Hub
-  awx.awx.organization:
+  ansible.controller.organization:
     name: Default
     state: present
     galaxy_credentials:
@@ -91,7 +91,7 @@
     validate_certs: true  
 
 - name: Update Default org to use Automation Hub first and galaxy second
-  awx.awx.organization:
+  ansible.controller.organization:
     name: Default
     state: present
     galaxy_credentials:
