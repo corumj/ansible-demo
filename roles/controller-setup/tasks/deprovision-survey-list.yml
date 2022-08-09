@@ -47,4 +47,4 @@
     controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
-    validate_certs: false
+    validate_certs: "{{ override_verify_ssl | default(true) }}"
