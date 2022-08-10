@@ -43,4 +43,4 @@
         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
         tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
-        tower_verify_ssl: "{{ override_verify_ssl | default(true) }}"
+        tower_verify_ssl: "{{ keep_verify_ssl | default(true) }}"
