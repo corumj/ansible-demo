@@ -4,25 +4,12 @@
   connection: local 
   gather_facts: no
   vars:
-    group_name: "controller"
-    short_desc: "controller"
     server_env: "test" 
     server_os: "linux"
     business_domain_name: "Red Hat"
     aws_instance_type: m4.xlarge
-  # vars_prompt:
-  #   - name: prompt_admin_password
-  #     prompt: Set your initial Tower admin password
-  #     private: yes
-  #   - name: prompt_admin_password_confirm
-  #     prompt: Confirm your initial Tower admin password
-  #     private: yes
-      
+
   tasks:
-  # - name: Check if tower admin passwords match
-  #   fail:
-  #     msg: Admin passwords do not match, please rerun setup.sh and reenter initial password 
-  #   when: prompt_admin_password != prompt_admin_password_confirm
 
   - name: Setup AWS
     include_role:
@@ -32,50 +19,100 @@
     include_role:
       name: aws-infra-info
     
-  - name: call provision role to create a RHEL 8 server to install Tower on 
+  - name: call role to create all RHEL 8 servers for AAP
     include_role:
-      name: aws-ec2-provision 
+      name: aws-aap-infra 
 
-  - name: Add the host 
-    add_host:
-      name: "{{ ec2.instances[0].public_ip_address }}"
-      groups:
-        - tower 
-      ansible_ssh_private_key_file: ~/.ssh/id_rsa 
-      ansible_user: ec2-user
-      admin_password: "{{ admin_password }}"
-      tower_ip: "{{ ec2.instances[0].public_ip_address }}"
+  - meta: refresh_inventory
 
-- name: Install tower 
-  hosts: tower 
-  become: yes
+  # - name: print hostvars
+  #   debug:
+  #     msg: 
+  #       - "Controller Public DNS: {{ hostvars[groups['demo_controller'][0]]['public_dns_name'] }}"
+  #       - "Controller Private DNS: {{ hostvars[groups['demo_controller'][0]]['private_dns_name'] }}"
+  #       - "Execution Node 1 Private DNS: {{ hostvars[groups['demo_execution'][0]]['private_dns_name'] }}"
+  #       - "Services Catalog Public DNS: {{ hostvars[groups['demo_catalog'][0]]['public_dns_name'] }}"
+  #       - "SSO Public DNS: {{ hostvars[groups['demo_catalog'][0]]['public_dns_name'] }}"
+
+- name: Register to RHSM
+  hosts: aws_ec2
+  gather_facts: no
+  become: yes 
 
   tasks:
-    - name: Run updates 
-      package:
-        name: '*'
-        state: latest 
-        
-    - name: Setup tower on AWS Instance 
-      include_role:
-        name: controller-setup
+    - name: Subscribe to Ansible by Pool ID 
+      redhat_subscription:
+        state: present
+        username: "{{ redhat_username }}"
+        password: "{{ redhat_password }}"
+        pool_ids: "{{ aap_pool_id }}"
+      async: 1400
+      poll: 30
 
-    - name: Add credentials
-      include_role:
-        name: controller-credentials
+# - name: Exchange Keys between servers
+#   hosts: aws_ec2
+#   become: yes 
+#   become_user: ansiblesa 
 
-    - name: Add Inventories 
-      include_role:
-        name: controller-inventory 
+#   tasks:
+#     - name: SSH KeyGen command
+#       shell: ssh-keygen -q -b 2048 -t rsa -N "" -C "Ansible" -f ~/.ssh/id_rsa
+#       args:
+#         creates: "~/.ssh/id_rsa"
 
-    - name: Add Projects 
-      include_role:
-        name: controller-projects 
+#     - name: Fetch the keyfile from the node to master
+#       fetch: 
+#         src: "~/.ssh/id_rsa.pub"
+#         dest: "buffer/{{ inventory_hostname }}-id_rsa.pub"
+#         flat: yes
 
-    - name: Add Workflows 
-      include_role:
-        name: controller-workflows
+#     - name: Copy the key add to authorized_keys using Ansible module
+#       authorized_key:
+#         user: ansiblesa
+#         state: present
+#         key: "{{ lookup('file','{{ playbook_dir }}/buffer/{{ item }}-id_rsa.pub')}}"
+#       when: item != inventory_hostname
+#       with_items: 
+#         - "{{ groups['aws_ec2'] }}" 
 
-    - debug:
-        msg: "Access Tower here: https://ansible.{{ top_level_domain }}"
+- name: Install Automation Controller 
+  hosts: localhost 
+  connection: local 
+  gather_facts: no
+
+  tasks:
+
+    - name: Extract AAP tar.gz install
+      unarchive:
+        src: "aap.tar.gz"
+        dest: "{{ playbook_dir }}"
+        extra_opts: ['--strip-components=1', '--show-stored-names']
+    ## This is a real PITA if on a mac.  You need to install gnu-tar, 
+    ## I did `brew install gnu-tar`
+
+# - name: Configure Automation Controller  
+#   hosts: demo_controller 
+#   become: yes
+#   become_user: ansiblesa 
+
+#   tasks:
+
+#     - name: Add credentials
+#       include_role:
+#         name: controller-credentials
+
+#     - name: Add Inventories 
+#       include_role:
+#         name: controller-inventory 
+
+#     - name: Add Projects 
+#       include_role:
+#         name: controller-projects 
+
+#     - name: Add Workflows 
+#       include_role:
+#         name: controller-workflows
+
+#     - debug:
+#         msg: "Access Tower here: https://ansible.{{ top_level_domain }}"
           

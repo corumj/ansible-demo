@@ -32,6 +32,7 @@
           - 80 # HTTP
           - 443 # HTTPS
           - 22 # SSH
+          - 27199 # Ansible Default Receptor Port 
         cidr_ip: 0.0.0.0/0
       - proto: icmp
         to_port: -1
@@ -52,6 +53,7 @@
           - 5432 # PostgreSQL
           - 636 # LDAPS (LDAP over TLS)
           - 873 # Rsync 
+          - 27199 # Ansible Default Receptor Port 
           - 3268-3269 # Global Catalog 
           - 1024-65535 # Ephemeral RPC ports
         cidr_ip: 10.0.0.0/16

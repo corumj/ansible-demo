@@ -1,3 +1,3 @@
 ---
-aap_dir: "/home/{{ username }}/aap_install"
+aap_dir: "/home/ansiblesa/aap_install"
 output_dir: "{{ playbook_dir }}/{{ ec2_name_prefix }}"

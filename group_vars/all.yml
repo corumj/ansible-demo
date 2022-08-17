@@ -5,6 +5,7 @@ aws_region: us-east-2 # must match your aws config profile - used for community.
 # aws_windows_ami: ami-029bfac3973c1bda1 # must be for your region
 aws_instance_type: t2.medium 
 username: ec2-user
+ansible_user: ec2-user 
 
 # Key pair 
 public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"  

@@ -1,31 +1,28 @@
 ---
-- name: Start Controller Instance
+- name: Start AAP Instances
   hosts: localhost
   connection: local 
   gather_facts: no
   tasks:
-  - name: Find Controller EC2 Instance 
+  - name: Find AAP EC2 Instances 
     amazon.aws.ec2_instance_info:
       profile: "{{ aws_profile }}"
       region: "{{ aws_region }}"
       filters:
-        tag:group_name: "controller"
-        tag:short_desc: "controller"
         tag:server_env: "test" 
-        tag:server_os: "linux"
         tag:business_domain_name: "Red Hat"
         instance-state-name: stopped
-    register: instance
+    register: instances
 
-  - name: Start Controller EC2 Instance
+  - name: Start AAP EC2 Instance
     amazon.aws.ec2_instance:
       profile: "{{ aws_profile }}"
       region: "{{ aws_region }}"
       instance_ids:
-        - "{{ instance.instances[0].instance_id }}"
+        - "{{ item.instance_id }}"
       wait: yes
       state: running 
-    register: ec2_running
+    loop: instance.instances
 
   - name: Find Controller EC2 Instance Public IP Address
     amazon.aws.ec2_instance_info:

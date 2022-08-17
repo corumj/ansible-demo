@@ -32,7 +32,7 @@
     dest: "{{ aap_dir }}/inventory"
 
 - name: run the Automation Controller installer
-  shell: "./setup.sh -e gpgcheck=0"
+  shell: "ANSIBLE_BECOME_METHOD='sudo' ANSIBLE_BECOME=True ./setup.sh -e gpgcheck=0"
   args:
     chdir: "{{ aap_dir }}"
   async: 1400

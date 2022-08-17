@@ -9,10 +9,7 @@
       profile: "{{ aws_profile }}"
       region: "{{ aws_region }}"
       filters:
-        tag:group_name: "controller"
-        tag:short_desc: "controller"
         tag:server_env: "test" 
-        tag:server_os: "linux"
         tag:business_domain_name: "Red Hat"
         instance-state-name: running
       state: stopped

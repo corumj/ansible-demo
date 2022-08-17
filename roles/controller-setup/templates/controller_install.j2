@@ -1,21 +1,40 @@
 [automationcontroller]
-localhost ansible_connection=local
+{{ hostvars[groups['demo_controller'][0]]['public_dns_name'] }} ansible_connection=local
+
+[automationcontroller:vars]
+peers=execution_nodes
+node_type=control
+
+[execution_nodes]
+{{ hostvars[groups['demo_execution'][0]]['public_dns_name'] }} 
+
+[execution_nodes:vars]
+node_type=execution 
+node_state=active 
+listener_protocol=tcp
+ansible_user=ansiblesa
 
 [automationhub]
 
+[automationcatalog]
+{{ hostvars[groups['demo_catalog'][0]]['public_dns_name'] }} ansible_user=ansiblesa
+
 [database]
+
+[sso]
+{{ hostvars[groups['demo_sso'][0]]['public_dns_name'] }} ansible_user=ansiblesa
 
 [servicescatalog_workers]
 
 [all:vars]
-admin_password='{{admin_password}}'
+admin_password='{{ admin_password }}'
 
 pg_host=''
 pg_port=''
 
 pg_database='awx'
 pg_username='awx'
-pg_password='{{admin_password}}'
+pg_password='{{ admin_password }}'
 pg_sslmode='prefer'  # set to 'verify-full' for client-side enforced SSL
 
 gpgcheck='{{ gpgcheck | default(1)}}'
@@ -32,3 +51,19 @@ registry_password='{{ redhat_password }}'
 # Receptor Configuration
 #
 receptor_listener_port=27199
+
+automationcatalog_pg_host='{{ hostvars[groups['demo_controller'][0]]['private_dns_name'] }}'
+automationcatalog_pg_port='5432'
+
+automationcatalog_pg_database='automationservicescatalog'
+automationcatalog_pg_username='automationservicescatalog'
+automationcatalog_pg_password='{{ admin_password }}'
+
+automationcatalog_controller_username='admin'
+automationcatalog_controller_password='{{ admin_password }}'
+
+insights_username='{{ redhat_username }}'
+insights_password='{{ redhat_password }}'
+
+sso_keystore_password='{{ admin_password }}'
+sso_console_admin_password='{{ admin_password }}'
