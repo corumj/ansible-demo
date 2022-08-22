@@ -1,10 +1,10 @@
 ---
-- name: Stop Tower Instance
+- name: Stop AAP Instances
   hosts: localhost
   connection: local 
   gather_facts: no
   tasks:
-  - name: Stop Tower EC2 Instance 
+  - name: Stop AAP EC2 Instance 
     amazon.aws.ec2_instance:
       profile: "{{ aws_profile }}"
       region: "{{ aws_region }}"

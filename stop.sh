@@ -2,6 +2,6 @@
 
 pushd "$( dirname "${BASH_SOURCE[0]}" )"
 
-ansible-playbook stop.yml 
+ansible-playbook -i aws_ec2.yml stop.yml 
 
 popd

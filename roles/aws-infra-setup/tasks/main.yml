@@ -32,6 +32,7 @@
           - 80 # HTTP
           - 443 # HTTPS
           - 22 # SSH
+          - 8443 # needed for SSO because reasons apparently
           - 27199 # Ansible Default Receptor Port 
         cidr_ip: 0.0.0.0/0
       - proto: icmp
