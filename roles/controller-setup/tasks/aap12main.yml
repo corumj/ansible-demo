@@ -119,11 +119,11 @@
   args:
     creates: /etc/letsencrypt/live/ansible.{{ aws_user }}.ade.redhatgov.io/fullchain.pem
 
-- name: Setup Tower Credential 
+- name: Setup Controller Credential 
   ansible.controller.credential:
     state: present
-    name: Tower Credential
-    description: Tower Credential to automate Tower itself 
+    name: Controller Credential
+    description: Controller Credential to automate Tower itself 
     organization: Default 
     credential_type: Ansible Tower
     inputs:
@@ -245,7 +245,7 @@
 #     project: Ansible Demo
 #     playbook: "choose-demo.yml"
 #     credentials: 
-#       - "Tower Credential"
+#       - "Controller Credential"
 #     survey_enabled: yes 
 #     survey_spec: "{{ lookup('file', 'choose-demo.json') }}"
 #     state: "present"
@@ -262,7 +262,7 @@
     project: Ansible Demo
     playbook: "provision.yml"
     credentials: 
-      - "Tower Credential"
+      - "Controller Credential"
       - "AWS"
       - "AWS Windows"
     extra_vars:
@@ -329,7 +329,7 @@
     project: ServiceNow
     playbook: "initialize.yml"
     credentials: 
-      - "Tower Credential"
+      - "Controller Credential"
       - "AWS"
     use_fact_cache: yes
     survey_enabled: yes 

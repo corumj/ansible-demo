@@ -19,7 +19,7 @@
     project: Ansible Demo
     playbook: "deprovision.yml"
     credentials: 
-      - "Tower Credential"
+      - "Controller Credential"
       - "AWS"
     survey_enabled: yes 
     survey_spec: | 

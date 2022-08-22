@@ -25,6 +25,11 @@
 
   - meta: refresh_inventory
 
+  - name: Prepare certificates directory 
+    file: 
+      name: "{{ playbook_dir }}/generated_files"
+      state: directory 
+
   # - name: print hostvars
   #   debug:
   #     msg: 
@@ -34,10 +39,12 @@
   #       - "Services Catalog Public DNS: {{ hostvars[groups['demo_catalog'][0]]['public_dns_name'] }}"
   #       - "SSO Public DNS: {{ hostvars[groups['demo_catalog'][0]]['public_dns_name'] }}"
 
-- name: Register to RHSM
+- name: Register to RHSM 
   hosts: aws_ec2
   gather_facts: no
   become: yes 
+  collections:
+    - community.general 
 
   tasks:
     - name: Subscribe to Ansible by Pool ID 
@@ -45,35 +52,62 @@
         state: present
         username: "{{ redhat_username }}"
         password: "{{ redhat_password }}"
-        pool_ids: "{{ aap_pool_id }}"
-      async: 1400
-      poll: 30
 
-# - name: Exchange Keys between servers
-#   hosts: aws_ec2
+    - name: Make sure repositories are allowed to be managed from subscription-manager 
+      shell: subscription-manager config --rhsm.manage_repos=1 
+
+    - name: Enable jb-eap repo 
+      rhsm_repository:
+        name: jb-eap-7.3-for-rhel-8-x86_64-rpms
+        state: enabled 
+
+- name: Generate TLS certificates for Controller, SSO, and Catalog 
+  hosts: localhost 
+  connection: local 
+  tasks: 
+    - name: Prepare certificate challenges for Controller, SSO, and Catalog 
+      include_role:
+        name: certificates
+        tasks_from: prepare-challenge.yml 
+
+    - name: Prepare route53 DNS for challenge
+      include_role:
+        name: certificates
+        tasks_from: set-dns-challenge.yml
+
+    - name: Validate DNS challenges 
+      include_role: 
+        name: certificates
+        tasks_from: validate-challenge.yml
+
+    - name: Create SSO Java Keystore 
+      java_keystore:
+        name: sso
+        certificate: "{{ lookup('file', '{{ playbook_dir }}/generated_files/{{ sso_dns }}_chain') }}"
+        private_key: "{{ lookup('file', '{{ playbook_dir }}/generated_files/cert_key') }}"
+        password: "{{ admin_password }}"
+        dest: "{{ playbook_dir }}/generated_files/sso.jks"
+
+    - name: Setup AWS Route 53 for TLS 
+      include_role:
+        name: certificates 
+        tasks_from: set-dns.yml 
+
+# - name: Deploy TLS certificates for Controller 
+#   hosts: demo_controller 
+#   gather_facts: no 
 #   become: yes 
-#   become_user: ansiblesa 
 
 #   tasks:
-#     - name: SSH KeyGen command
-#       shell: ssh-keygen -q -b 2048 -t rsa -N "" -C "Ansible" -f ~/.ssh/id_rsa
-#       args:
-#         creates: "~/.ssh/id_rsa"
+#     - name: Copy Controller Cert 
+#       copy:
+#         src: "{{ playbook_dir }}/generated_files/{{ controller_dns }}_chain"
+#         dest: "{{ controller_cert_dest }}"
 
-#     - name: Fetch the keyfile from the node to master
-#       fetch: 
-#         src: "~/.ssh/id_rsa.pub"
-#         dest: "buffer/{{ inventory_hostname }}-id_rsa.pub"
-#         flat: yes
-
-#     - name: Copy the key add to authorized_keys using Ansible module
-#       authorized_key:
-#         user: ansiblesa
-#         state: present
-#         key: "{{ lookup('file','{{ playbook_dir }}/buffer/{{ item }}-id_rsa.pub')}}"
-#       when: item != inventory_hostname
-#       with_items: 
-#         - "{{ groups['aws_ec2'] }}" 
+#     - name: Copy Controller Key 
+#       copy:
+#         src: "{{ playbook_dir }}/generated_files/cert_key"
+#         dest: "{{ controller_key_dest }}"
 
 - name: Install Automation Controller 
   hosts: localhost 
@@ -81,38 +115,86 @@
   gather_facts: no
 
   tasks:
+    - name: Create directory for aap installer
+      file:
+        path: "{{ playbook_dir }}/aap"
+        state: directory
 
     - name: Extract AAP tar.gz install
       unarchive:
         src: "aap.tar.gz"
-        dest: "{{ playbook_dir }}"
+        dest: "{{ playbook_dir }}/aap"
         extra_opts: ['--strip-components=1', '--show-stored-names']
     ## This is a real PITA if on a mac.  You need to install gnu-tar, 
     ## I did `brew install gnu-tar`
 
-# - name: Configure Automation Controller  
-#   hosts: demo_controller 
-#   become: yes
-#   become_user: ansiblesa 
+    - name: template inventory file for Ansible Controller Install
+      template:
+        src: "controller_install.j2"
+        dest: "{{ playbook_dir }}/aap/inventory"
 
-#   tasks:
+    - name: run the Automation Controller installer
+      shell: "ANSIBLE_BECOME_METHOD='sudo' ANSIBLE_BECOME=True ./setup.sh -e gpgcheck=0"
+      args:
+        chdir: "{{ playbook_dir }}/aap"
+      async: 2800
+      poll: 30
 
-#     - name: Add credentials
-#       include_role:
-#         name: controller-credentials
+    - name: wait for Automation Controller to be up
+      uri:
+        url: https://{{ hostvars[groups['demo_controller'][0]]['public_dns_name'] }}/api/v2/ping/
+        method: GET
+        user: admin
+        password: "{{ admin_password }}"
+        validate_certs: false
+      register: check2
+      until: check2.json is defined and check2.json.instances[0].capacity > 0 and check2.json.instance_groups[0].capacity > 0
+      retries: 60
+      delay: 10
 
-#     - name: Add Inventories 
-#       include_role:
-#         name: controller-inventory 
+    - name: Load manifest into variable
+      local_action:
+        module: slurp
+        src: "{{ playbook_dir }}/manifest.zip"
+      register: manifest_file
 
-#     - name: Add Projects 
-#       include_role:
-#         name: controller-projects 
+    - name: Post manifest file
+      uri:
+        url: https://{{ hostvars[groups['demo_controller'][0]]['public_dns_name'] }}/api/v2/config/
+        method: POST
+        user: admin
+        password: "{{ admin_password }}"
+        body: '{ "eula_accepted": true, "manifest": "{{ manifest_file.content }}" }'
+        body_format: json
+        validate_certs: false
+        force_basic_auth: true
+        
+- name: Configure Automation Controller  
+  hosts: localhost 
+  connection: local 
+  gather_facts: no 
 
-#     - name: Add Workflows 
-#       include_role:
-#         name: controller-workflows
+  tasks:
 
-#     - debug:
-#         msg: "Access Tower here: https://ansible.{{ top_level_domain }}"
+    - name: Add credentials
+      include_role:
+        name: controller-credentials
+
+    - name: Add Inventories 
+      include_role:
+        name: controller-inventory 
+
+    - name: Add Projects 
+      include_role:
+        name: controller-projects 
+
+    - name: Add Workflows 
+      include_role:
+        name: controller-workflows
+
+    - debug:
+        msg: 
+          - "Access Automation Controller here: https://{{ controller_dns }}"
+          - "Access SSO here: https://{{ sso_dns }}"
+          - "Access Services Catalog here: https://{{ catalog_dns }}"
           

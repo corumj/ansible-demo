@@ -5,9 +5,9 @@
     state: present
     wait: yes
     organization: Default 
-    controller_username: "{{ tower_username }}"
+    controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "https://controller.{{ top_level_domain }}"
     validate_certs: true
     scm_type: git 
     scm_url: https://github.com/corumj/ansible-demo.git
@@ -22,7 +22,7 @@
     project: Ansible Demo
     playbook: "provision.yml"
     credentials: 
-      - "Tower Credential"
+      - "Controller Credential"
       - "AWS"
       - "AWS Windows"
     extra_vars:
@@ -35,7 +35,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "https://controller.{{ top_level_domain }}"
     validate_certs: true
 
 - name: Create  Deprovision Template
@@ -46,7 +46,7 @@
     project: Ansible Demo
     playbook: "deprovision.yml"
     credentials: 
-      - "Tower Credential"
+      - "Controller Credential"
       - "AWS"
     extra_vars:
       aws_profile: ''
@@ -55,7 +55,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "https://controller.{{ top_level_domain }}"
     validate_certs: true
 
 - name: Remove Demo Job Template 
@@ -65,7 +65,7 @@
     inventory: AWS 
     project: Linux Tasks 
     state: absent 
-    controller_username: "{{ tower_username }}"
+    controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "https://controller.{{ top_level_domain }}"
     use_fact_cache: yes 

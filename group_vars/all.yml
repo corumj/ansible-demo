@@ -11,13 +11,16 @@ ansible_user: ec2-user
 public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"  
 private_key: "{{ lookup('file', '~/.ssh/id_rsa') }}"  
 
-# Tower
-tower_version: 3.8.1-1
-tower_installer_url: https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-{{ tower_version }}.tar.gz
-default_tower_url: https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-latest.tar.gz
-# aw_repo_url:
-tower_username: admin
-
 # Demo specific items 
 servicenow_git_branch: platform 
 windows_git_branch: platform
+
+# DNS Information needed for certificate request
+controller_dns: controller.{{ top_level_domain }}
+sso_dns: sso.{{ top_level_domain }}
+catalog_dns: catalog.{{ top_level_domain }}
+
+# For dealing with certificates 
+controller_cert_dest: /etc/security/tower.cert
+controller_key_dest: /etc/security/tower.key
+java_keystore_dest: /etc/security/sso.jks

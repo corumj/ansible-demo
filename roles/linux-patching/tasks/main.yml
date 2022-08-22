@@ -23,7 +23,7 @@
     playbook: "setup_patching_demo.yml"
     organization: Default 
     credentials: 
-      - "Tower Credential"
+      - "Controller Credential"
       - "AWS"
       - "AWS Linux"
     # survey_enabled: yes 

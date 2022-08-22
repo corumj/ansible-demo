@@ -1,5 +1,4 @@
 ---
-
 - name: Create 3 Tier App Deployment Workflow Template 
   ansible.controller.workflow_job_template:
     name: "[ Demo ] 3 Tier App Deployment" 
@@ -9,7 +8,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Create frontend provisioning node
@@ -27,7 +26,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Create backend provisioning node
@@ -45,7 +44,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Create database provisioning node
@@ -63,7 +62,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 # - name: Run the provisioning step (required to setup workflow)
@@ -91,7 +90,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Create Deploy Demo Frontend node 
@@ -106,7 +105,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Create Configure IIS node 
@@ -123,7 +122,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Create Configure DNS client node 
@@ -140,7 +139,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Update frontend provisioning node
@@ -162,7 +161,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Create postgres node 
@@ -177,7 +176,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Create deploy goaddr node 
@@ -192,7 +191,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Create timesync node 
@@ -210,7 +209,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Create crypto node 
@@ -227,7 +226,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Update backend provisioning node
@@ -249,7 +248,7 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
 
 - name: Update database provisioning node
@@ -271,5 +270,5 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true

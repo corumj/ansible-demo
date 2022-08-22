@@ -5,9 +5,9 @@
     state: present
     wait: yes
     organization: Default 
-    controller_username: "{{ tower_username }}"
+    controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
     scm_type: git 
     scm_url: https://github.com/corumj/ansible-servicenow-demo.git
@@ -22,7 +22,7 @@
     project: ServiceNow
     playbook: "initialize.yml"
     credentials: 
-      - "Tower Credential"
+      - "Controller Credential"
       - "AWS"
     use_fact_cache: yes
     survey_enabled: yes 
@@ -30,5 +30,5 @@
     state: "present"
     controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true

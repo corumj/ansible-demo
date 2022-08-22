@@ -1,15 +1,24 @@
 ---
-- name: teardown tower infrastructure 
+- name: Deregister servers from RHSM 
+  hosts: aws_ec2
+  gather_facts: no 
+  become: yes
+
+  tasks:
+
+    - name: Unregister systems from RHSM
+      redhat_subscription:
+        state: absent
+        username: "{{ redhat_username }}"
+        password: "{{ redhat_password }}"
+
+- name: Teardown Controller infrastructure 
   hosts: localhost
   connection: local 
   gather_facts: no
-  vars:
-    group_name: "tower"
-    short_desc: "tower"
-    server_env: "test" 
-    server_os: "linux"
-    business_domain_name: "Red Hat"
+
   tasks:
+
   - name: Deprovision Demo EC2 Instances
     community.aws.ec2_instance:
       profile: "{{ aws_profile | default('') }}"
@@ -22,6 +31,6 @@
       aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
       aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
 
-  - name: Teardown AWS infrastructure
-    include_role:
-      name: aws-infra-teardown
+  # - name: Teardown AWS infrastructure
+  #   include_role:
+  #     name: aws-infra-teardown

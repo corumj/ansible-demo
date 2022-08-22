@@ -47,7 +47,7 @@
     playbook: "initialize.yml"
     organization: Default 
     credentials: 
-      - "Tower Credential"
+      - "Controller Credential"
       - "AWS"
     survey_enabled: yes 
     survey_spec: "{{ lookup('file', 'windows.json') }}"
@@ -68,7 +68,7 @@
     limit: tag_ad_server
     ask_variables_on_launch: yes
     credentials: 
-      - "Tower Credential"
+      - "Controller Credential"
       - "AWS"
       - "AWS Windows"
     # survey_enabled: yes 

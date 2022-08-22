@@ -34,7 +34,7 @@
     aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
     aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
   register: ec2_loop 
-  async: 1400
+  async: 2400
   poll: 0
   loop:
     - { name: "test-controller-linux", group: "controller", short_desc: "controller" }
@@ -47,7 +47,7 @@
     jid: "{{ item.ansible_job_id }}"
     mode: status 
   retries: 20 
-  delay: 30 
+  delay: 10 
   loop: "{{ ec2_loop.results }}"
   register: ec2_loop_jobs 
   until: ec2_loop_jobs.finished 

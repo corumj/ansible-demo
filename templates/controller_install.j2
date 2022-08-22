@@ -1,12 +1,12 @@
 [automationcontroller]
-{{ hostvars[groups['demo_controller'][0]]['public_dns_name'] }} ansible_connection=local
+{{ hostvars[groups['demo_controller'][0]]['public_dns_name'] }} ansible_user=ec2-user
 
 [automationcontroller:vars]
 peers=execution_nodes
 node_type=control
 
 [execution_nodes]
-{{ hostvars[groups['demo_execution'][0]]['public_dns_name'] }} 
+{{ hostvars[groups['demo_execution'][0]]['public_dns_name'] }} ansible_user=ec2-user
 
 [execution_nodes:vars]
 node_type=execution 
@@ -65,5 +65,20 @@ automationcatalog_controller_password='{{ admin_password }}'
 insights_username='{{ redhat_username }}'
 insights_password='{{ redhat_password }}'
 
+# For an alternative front end url needed for SSO configuration with Automation
+# Services Catalog, provide the URL.
+
+# automationcatalog_main_url='{{ catalog_dns }}'
+
+# Certificate and key to install in nginx for the web UI and API
+web_server_ssl_cert={{ playbook_dir }}/generated_files/{{ controller_dns }}_chain
+web_server_ssl_key={{ playbook_dir }}/generated_files/cert_key
+
+# Keystore file to install in SSO node
+sso_custom_keystore_file='{{ playbook_dir }}/generated_files/sso.jks'
+
+# The default install will deploy SSO with sso_use_https=True
+# Keystore password is required for https enabled SSO
 sso_keystore_password='{{ admin_password }}'
+
 sso_console_admin_password='{{ admin_password }}'

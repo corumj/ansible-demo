@@ -5,9 +5,9 @@
     description: AWS Inventory 
     organization: Default 
     state: present 
-    controller_username: "{{ tower_username }}"
+    controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "https://controller.{{ top_level_domain }}"
     validate_certs: true
 
 - name: Create AWS Inventory Source
@@ -32,7 +32,7 @@
           parent_group: os
       compose:
         ansible_host: private_ip_address
-    controller_username: "{{ tower_username }}"
+    controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "https://{{ controller_dns }}"
     validate_certs: false

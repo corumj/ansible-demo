@@ -5,9 +5,9 @@
     state: present
     wait: yes
     organization: Default 
-    controller_username: "{{ tower_username }}"
+    controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     validate_certs: true
     scm_type: git 
     scm_url: https://github.com/corumj/ansible-linux-tasks
@@ -26,9 +26,9 @@
       - AWS Linux 
     state: present 
     ask_limit_on_launch: yes 
-    controller_username: "{{ tower_username }}"
+    controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     use_fact_cache: yes 
 
 - name: Create Linux - RHEL System Role timesync template 
@@ -43,9 +43,9 @@
       - AWS Linux 
     state: present 
     ask_limit_on_launch: yes 
-    controller_username: "{{ tower_username }}"
+    controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     use_fact_cache: yes 
 
 - name: Create Linux - Galaxy Role Setup Postgresql template 
@@ -60,9 +60,9 @@
       - AWS Linux 
     state: present 
     ask_limit_on_launch: yes 
-    controller_username: "{{ tower_username }}"
+    controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     use_fact_cache: yes 
 
 - name: Create Linux - Deploy GoAddr API template 
@@ -77,7 +77,7 @@
       - AWS Linux 
     state: present 
     ask_limit_on_launch: yes
-    controller_username: "{{ tower_username }}"
+    controller_username: "admin"
     controller_password: "{{ admin_password }}"
-    controller_host: "https://ansible.{{ top_level_domain }}"
+    controller_host: "{{ controller_dns }}"
     use_fact_cache: yes 

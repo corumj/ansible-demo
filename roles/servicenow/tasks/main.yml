@@ -43,7 +43,7 @@
     playbook: "initialize.yml"
     organization: Default 
     credentials: 
-      - "Tower Credential"
+      - "Controller Credential"
       - "AWS"
     survey_enabled: yes 
     survey_spec: "{{ lookup('file', 'servicenow.json') }}"
