@@ -16,3 +16,9 @@ admin_password: mypassword123
 # Sets the Route53 DNS zone to use for Amazon Web Services
 top_level_domain: sandbox677.opentlc.com # this comes from the RHPDS email
 
+## Staging or Prod, only switch to Prod when you've confirmed your setup works
+acme_directory_server: https://acme-staging-v02.api.letsencrypt.org/directory  # Staging
+# acme_directory_server: https://acme-v02.api.letsencrypt.org/directory  # Prod
+
+cert_email: some@email.com  # Required for ACME cert verification process 
+force: no # Force a new certificate to be generated even if one already exists (not recommended to set to true unless troubleshooting)
