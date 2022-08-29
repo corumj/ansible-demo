@@ -11,7 +11,7 @@
     validate_certs: true
     scm_type: git 
     scm_url: https://github.com/corumj/ansible-demo.git
-    scm_branch: OpenEnvironments
+    scm_branch: OEwMesh
     scm_update_on_launch: yes 
 
 - name: Create Provision Template
