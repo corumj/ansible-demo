@@ -1,15 +1,15 @@
 ---
 collections:
   - name: community.aws
-    version: 5.0.0 
+ #   version: 5.0.0 
   - ansible.windows
   # - community.windows
   - name: amazon.aws
-    version: 3.4.0
+#    version: 3.4.0
   - name: ansible.controller
     version: 4.1.0 
   - containers.podman
   # - ansible.tower
   - name: community.general
-    version: 6.1.0
+ #   version: 6.1.0
     
