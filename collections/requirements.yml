@@ -10,4 +10,6 @@ collections:
     version: 4.1.0 
   - containers.podman
   # - ansible.tower
-  - community.general
+  - name: community.general
+    version: 6.1.0
+    
